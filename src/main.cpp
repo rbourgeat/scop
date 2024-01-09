@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/09 10:46:06 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/09 10:49:51 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ private:
     GLFWwindow* window;
 
     void initWindow() {
-
         if (!glfwInit()) {
             throw std::runtime_error("Failed to initialize GLFW");
         }
@@ -45,6 +44,16 @@ private:
             glfwTerminate();
             throw std::runtime_error("Failed to create GLFW window");
         }
+
+        // Set the window resize callback
+        glfwSetWindowSizeCallback(window, VulkanApp::onWindowResized);
+    }
+
+    static void onWindowResized(GLFWwindow* window, int width, int height) {
+        if (width == 0 || height == 0) return;
+
+        VulkanApp* app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
+        app->recreateSwapChain();
     }
 
     void initVulkan() {
@@ -60,6 +69,13 @@ private:
     void cleanup() {
         glfwDestroyWindow(window);
         glfwTerminate();
+    }
+
+    void recreateSwapChain() {
+        // Handle swap chain recreation on window resize
+        // This is where you would recreate Vulkan resources associated with the swap chain
+        // (e.g., framebuffers, command buffers, etc.)
+        // std::cout << "Window resized!" << std::endl;
     }
 };
 
