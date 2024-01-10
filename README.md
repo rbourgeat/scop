@@ -27,3 +27,7 @@ make
 ```bash
 ./scop
 ```
+
+## Sources
+
+- https://vulkan-tutorial.com

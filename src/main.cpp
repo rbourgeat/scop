@@ -6,14 +6,12 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/10 00:47:36 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/10 08:31:54 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include <stdexcept>
-#include <cstdlib>
-#include <vector>
+#include <cstring>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -23,6 +21,20 @@
 const char* TITLE = "scop";
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
+
+const std::vector<const char*> validationLayers = {
+    "VK_LAYER_INTEL_nullhw",
+    "VK_LAYER_MESA_device_select",
+    "VK_LAYER_MESA_overlay"
+};
+
+#ifdef DEBUG
+    constexpr bool debugMode = true;
+    constexpr bool enableValidationLayers = false;
+#else
+    constexpr bool debugMode = false;
+    constexpr bool enableValidationLayers = true;
+#endif
 
 class VulkanApp {
 public:
@@ -35,21 +47,7 @@ public:
 
 private:
     GLFWwindow* window;
-    vk::UniqueInstance instance;
-    vk::UniqueSurfaceKHR surface;
-    vk::PhysicalDevice physicalDevice;
-    vk::UniqueDevice device;
-    vk::Queue graphicsQueue;
-    vk::Queue presentQueue;
-    vk::UniqueSwapchainKHR swapChain;
-    std::vector<vk::Image> swapChainImages;
-    std::vector<vk::UniqueImageView> swapChainImageViews;
-    vk::UniquePipelineLayout pipelineLayout;
-    vk::UniqueRenderPass renderPass;
-    vk::UniquePipeline graphicsPipeline;
-    std::vector<vk::UniqueFramebuffer> swapChainFramebuffers;
-    vk::UniqueCommandPool commandPool;
-    std::vector<vk::UniqueCommandBuffer> commandBuffers;
+    VkInstance instance;
 
     void initWindow() {
         if (!glfwInit()) {
@@ -67,94 +65,85 @@ private:
         }
 
         glfwSetWindowUserPointer(window, this);
-        glfwSetWindowSizeCallback(window, VulkanApp::onWindowResized);
-    }
-
-    static void onWindowResized(GLFWwindow* window, int width, int height) {
-        if (width == 0 || height == 0) return;
-
-        VulkanApp* app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
-        app->recreateSwapChain();
     }
 
     void initVulkan() {
         createInstance();
-        createSurface();
-        pickPhysicalDevice();
-        createLogicalDevice();
-        createSwapChain();
-        createImageViews();
-        createRenderPass();
-        createGraphicsPipeline();
-        createFramebuffers();
-        createCommandPool();
-        createCommandBuffers();
     }
 
     void createInstance() {
-        vk::ApplicationInfo appInfo("YourAppName", VK_MAKE_VERSION(1, 0, 0), "No Engine", VK_MAKE_VERSION(1, 0, 0), VK_API_VERSION_1_0);
-
-        vk::InstanceCreateInfo createInfo({}, &appInfo);
-
-        // Manually define VK_KHR_PORTABILITY_EXTENSION_NAME or include the Vulkan core header file
-        const char* extensionName = "VK_KHR_portability_enumeration";
-
-        createInfo.enabledExtensionCount = 1;
-        createInfo.ppEnabledExtensionNames = &extensionName;
-
-        // Set the VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR flag
-        createInfo.flags = vk::InstanceCreateFlags(VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR);
-
-        instance = vk::createInstanceUnique(createInfo);
-
-        // Print supported Vulkan extensions
-        uint32_t extensionCount = 0;
-        const char** extensions = glfwGetRequiredInstanceExtensions(&extensionCount);
-
-        std::cout << "Supported Vulkan Extensions:" << std::endl;
-        for (uint32_t i = 0; i < extensionCount; ++i) {
-            std::cout << extensions[i] << std::endl;
+        // Display Extensions:
+        if (debugMode) {
+            uint32_t extensionCount = 0;
+            vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+            std::vector<VkExtensionProperties> extensions(extensionCount);
+            vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+            std::cout << "Extensions:\n";
+            for (const auto& extension : extensions) {
+                std::cout << '\t' << extension.extensionName << '\n';
+            }
         }
+        
+        if (enableValidationLayers && !checkValidationLayerSupport()) {
+            throw std::runtime_error("Validation layers are enabled but not available!");
+        }
+        
+        VkApplicationInfo appInfo{};
+        appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+        appInfo.pApplicationName = TITLE;
+        appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+        appInfo.pEngineName = "No Engine";
+        appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+        appInfo.apiVersion = VK_API_VERSION_1_1;
+
+        VkInstanceCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+        createInfo.pApplicationInfo = &appInfo;
+
+        uint32_t glfwExtensionCount = 0;
+        const char** glfwExtensions;
+
+        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+        createInfo.enabledExtensionCount = glfwExtensionCount;
+        createInfo.ppEnabledExtensionNames = glfwExtensions;
+        
+        if (enableValidationLayers) {
+            createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+            createInfo.ppEnabledLayerNames = validationLayers.data();
+        } else {
+            createInfo.enabledLayerCount = 0;
+        }
+
+        if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+            throw std::runtime_error("Echec de la création de l'instance!");
+        }
+    
     }
 
-    void createSurface() {
-        // TODO
-    }
+    bool checkValidationLayerSupport() {
+        uint32_t layerCount;
+        vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
-    void pickPhysicalDevice() {
-        // TODO: Implement physical device selection here
-    }
+        std::vector<VkLayerProperties> availableLayers(layerCount);
+        vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-    void createLogicalDevice() {
-        // TODO: Implement logical device creation here
-    }
+        for (const char* layerName : validationLayers) {
+            bool layerFound = false;
 
-    void createSwapChain() {
-        // TODO: Implement swap chain creation here
-    }
+            for (const auto& layerProperties : availableLayers) {
+                if (strcmp(layerName, layerProperties.layerName) == 0) {
+                    layerFound = true;
+                    break;
+                }
+            }
 
-    void createImageViews() {
-        // TODO: Implement image view creation here
-    }
+            if (!layerFound) {
+                return false;
+            }
+        }
 
-    void createRenderPass() {
-        // TODO: Implement render pass creation here
-    }
-
-    void createGraphicsPipeline() {
-        // TODO: Implement graphics pipeline creation here
-    }
-
-    void createFramebuffers() {
-        // TODO: Implement framebuffer creation here
-    }
-
-    void createCommandPool() {
-        // TODO: Implement command pool creation here
-    }
-
-    void createCommandBuffers() {
-        // TODO: Implement command buffer creation here
+        return true;
     }
 
     void mainLoop() {
@@ -164,11 +153,9 @@ private:
     }
 
     void cleanup() {
-        // TODO: Implement cleanup code here
-    }
-
-    void recreateSwapChain() {
-        // TODO: Implement swap chain recreation on window resize
+        vkDestroyInstance(instance, nullptr);
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
 };
 
