@@ -6,12 +6,12 @@
 #    By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/09 07:51:01 by rbourgea          #+#    #+#              #
-#    Updated: 2024/01/10 09:06:26 by rbourgea         ###   ########.fr        #
+#    Updated: 2024/01/10 09:45:02 by rbourgea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra
+CXXFLAGS = -std=c++17 -Wall -Wextra -g
 LDFLAGS = -ldl
 
 UNAME_S := $(shell uname -s)
