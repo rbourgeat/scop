@@ -2,3 +2,4 @@ scop
 src/*.d
 src/*.o
 resources
+shaders/*spv
