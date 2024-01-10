@@ -6,12 +6,13 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/10 08:31:54 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/10 09:05:13 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <cstring>
+#include <optional>
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -49,6 +50,14 @@ private:
     GLFWwindow* window;
     VkInstance instance;
 
+    struct QueueFamilyIndices {
+        std::optional<uint32_t> graphicsFamily;
+
+        bool isComplete() {
+            return graphicsFamily.has_value();
+        }
+    };
+
     void initWindow() {
         if (!glfwInit()) {
             throw std::runtime_error("Failed to initialize GLFW");
@@ -69,6 +78,7 @@ private:
 
     void initVulkan() {
         createInstance();
+        pickPhysicalDevice();
     }
 
     void createInstance() {
@@ -118,7 +128,81 @@ private:
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
             throw std::runtime_error("Echec de la création de l'instance!");
         }
-    
+    }
+
+    void printDeviceInfo(VkPhysicalDevice device) {
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(device, &deviceProperties);
+        std::cout << std::endl;
+        std::cout << "Device Name: " << deviceProperties.deviceName << std::endl;
+        std::cout << "Device Type: " << deviceProperties.deviceType << std::endl;
+        std::cout << "API Version: " << VK_VERSION_MAJOR(deviceProperties.apiVersion) << "."
+                << VK_VERSION_MINOR(deviceProperties.apiVersion) << "."
+                << VK_VERSION_PATCH(deviceProperties.apiVersion) << std::endl;
+        std::cout << "Driver Version: " << deviceProperties.driverVersion << std::endl;
+        std::cout << "Vendor ID: " << deviceProperties.vendorID << std::endl;
+        std::cout << "Device ID: " << deviceProperties.deviceID << std::endl;
+        std::cout << std::endl;
+    }
+
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+        QueueFamilyIndices indices;
+
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+        int i = 0;
+        for (const auto& queueFamily : queueFamilies) {
+            if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+                indices.graphicsFamily = i;
+            }
+
+            if (indices.isComplete()) {
+                break;
+            }
+
+            i++;
+        }
+
+        return indices;
+    }
+
+    bool isDeviceSuitable(VkPhysicalDevice device) {
+        if (debugMode) {
+            printDeviceInfo(device);
+        }
+        
+        QueueFamilyIndices indices = findQueueFamilies(device);
+
+        return indices.isComplete();
+    }
+
+    void pickPhysicalDevice() {
+        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+        
+        uint32_t deviceCount = 0;
+        vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+        
+        if (deviceCount == 0) {
+            throw std::runtime_error("No Vulkan-compatible GPU found !");
+        }
+        
+        std::vector<VkPhysicalDevice> devices(deviceCount);
+        vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+        for (const auto& device : devices) {
+            if (isDeviceSuitable(device)) {
+                physicalDevice = device;
+                break;
+            }
+        }
+
+        if (physicalDevice == VK_NULL_HANDLE) {
+            throw std::runtime_error("No GPU can run this program !");
+        }
     }
 
     bool checkValidationLayerSupport() {
