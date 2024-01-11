@@ -6,7 +6,7 @@
 #    By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/09 07:51:01 by rbourgea          #+#    #+#              #
-#    Updated: 2024/01/11 10:11:53 by rbourgea         ###   ########.fr        #
+#    Updated: 2024/01/11 10:53:00 by rbourgea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,11 +51,11 @@ LINE_SEPARATOR=$(BOLD)$(PURPLE)<====================================>$(NC)
 all: shaders $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ_FILES)
-	@echo "$(YELLOW)$(EMOJI_LINK) Linking $(EXECUTABLE)$(NC)"
+	@echo "$(YELLOW)$(EMOJI_LINK) Linking $(BOLD)$(EXECUTABLE)$(NC)"
 	@$(CXX) $^ -o $@ $(LDFLAGS)
 	@echo "$(GREEN)$(BOLD)$(EMOJI_DONE) Build successful !$(NC)"
 	@TIME_DIFF=$$(echo $$(date +%s.%N) - $(TIME) | bc); \
-	echo "$(BLUE)Build completed in $(BOLD)$${TIME_DIFF}$(NC) $(BLUE)seconds$(NC)"
+	echo "$(BLUE)⏰ Build completed in $(BOLD)$${TIME_DIFF}$(NC) $(BLUE)seconds$(NC)"
 	@echo "$(LINE_SEPARATOR)"
 
 -include $(DEPS)

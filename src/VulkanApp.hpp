@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/11 10:10:41 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/11 10:52:09 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ private:
     std::vector<VkFence> inFlightFences;
     size_t currentFrame = 0;
 
+    bool framebufferResized = false;
+
     /* ================================= **
     ** Vulkan initialization             **
     ** File: VulkanInit.cpp              **
@@ -125,6 +127,7 @@ private:
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
     SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
     void createSwapChain();
+    void recreateSwapChain();
 
     void createImageViews();
 
@@ -133,6 +136,7 @@ private:
     ** File: VulkanClean.cpp             **
     ** ================================= */
     void cleanup();
+    void cleanupSwapChain();
 
     /* ================================= **
     ** Vulkan debug logs                 **
@@ -155,7 +159,7 @@ private:
     ** ================================= */
     void createFramebuffers();
     void createCommandPool();
-    void createCommandBuffer();
+    void createCommandBuffers();
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
     void createSyncObjects();
     void drawFrame();
@@ -201,6 +205,11 @@ private:
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
         std::cerr << "- Validation layer: " << pCallbackData->pMessage << std::endl;
         return VK_FALSE;
+    }
+
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+        auto app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
+        app->framebufferResized = true;
     }
 };
 
