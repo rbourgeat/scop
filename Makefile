@@ -6,9 +6,11 @@
 #    By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/09 07:51:01 by rbourgea          #+#    #+#              #
-#    Updated: 2024/01/11 07:46:59 by rbourgea         ###   ########.fr        #
+#    Updated: 2024/01/11 10:11:53 by rbourgea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+TIME = $(shell date +%s.%N)
 
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -g
@@ -52,6 +54,8 @@ $(EXECUTABLE): $(OBJ_FILES)
 	@echo "$(YELLOW)$(EMOJI_LINK) Linking $(EXECUTABLE)$(NC)"
 	@$(CXX) $^ -o $@ $(LDFLAGS)
 	@echo "$(GREEN)$(BOLD)$(EMOJI_DONE) Build successful !$(NC)"
+	@TIME_DIFF=$$(echo $$(date +%s.%N) - $(TIME) | bc); \
+	echo "$(BLUE)Build completed in $(BOLD)$${TIME_DIFF}$(NC) $(BLUE)seconds$(NC)"
 	@echo "$(LINE_SEPARATOR)"
 
 -include $(DEPS)

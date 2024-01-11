@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:50:01 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/11 07:41:18 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/11 09:34:53 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,12 @@ bool VulkanApp::checkValidationLayerSupport() {
 
     std::vector<VkLayerProperties> availableLayers(layerCount);
     vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+    std::cout << "Available Validation Layers:" << std::endl;
+    for (const auto& layerProperties : availableLayers) {
+        std::cout << "  " << layerProperties.layerName << std::endl;
+    }
+    std::cout << "-----------------------------" << std::endl;
 
     for (const char* layerName : validationLayers) {
         bool layerFound = false;
