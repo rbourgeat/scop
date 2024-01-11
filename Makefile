@@ -6,7 +6,7 @@
 #    By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/09 07:51:01 by rbourgea          #+#    #+#              #
-#    Updated: 2024/01/10 12:16:11 by rbourgea         ###   ########.fr        #
+#    Updated: 2024/01/11 07:46:59 by rbourgea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,26 +30,53 @@ SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 DEPS = $(OBJ_FILES:.o=.d)
 
+RED=\033[0;31m
+GREEN=\033[0;32m
+YELLOW=\033[0;33m
+BLUE=\033[0;34m
+PURPLE=\033[0;35m
+NC=\033[0m
+BOLD=\033[1m
+
+EMOJI_DONE=✅
+EMOJI_BUILD=🚀
+EMOJI_LINK=🔗
+EMOJI_CLEAN=🚽
+EMOJI_ERROR=❌
+
+LINE_SEPARATOR=$(BOLD)$(PURPLE)<====================================>$(NC)
+
 all: shaders $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ_FILES)
-	$(CXX) $^ -o $@ $(LDFLAGS)
+	@echo "$(YELLOW)$(EMOJI_LINK) Linking $(EXECUTABLE)$(NC)"
+	@$(CXX) $^ -o $@ $(LDFLAGS)
+	@echo "$(GREEN)$(BOLD)$(EMOJI_DONE) Build successful !$(NC)"
+	@echo "$(LINE_SEPARATOR)"
 
 -include $(DEPS)
 
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
+	@echo "$(YELLOW)$(EMOJI_BUILD) Compiling $(BOLD)$<$(NC)"
+	@$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@ > /dev/null 2>&1
 
 shaders:
-	cd shaders && bash compile.sh
+	@echo "$(LINE_SEPARATOR)"
+	@echo "$(YELLOW)$(EMOJI_BUILD) Compiling shaders...$(NC)"
+	@cd shaders && bash compile.sh && echo "$(GREEN)$(EMOJI_DONE) Shaders compiled successfully!$(NC)" || echo "$(RED)$(EMOJI_ERROR) Error compiling shaders.$(NC)"
+	@echo "$(LINE_SEPARATOR)"
 
 clean:
-	rm -f $(EXECUTABLE) $(OBJ_FILES) $(DEPS)
-	rm -rf shaders/*.spv
+	@echo "$(LINE_SEPARATOR)"
+	@echo "$(YELLOW)$(EMOJI_CLEAN) Cleaning...$(NC)"
+	@rm -f $(EXECUTABLE) $(OBJ_FILES) $(DEPS)
+	@rm -rf shaders/*.spv
+	@echo "$(GREEN)$(EMOJI_DONE) Cleaned !$(NC)"
 
 re: clean shaders all
 
 debug: CXXFLAGS += -DDEBUG
 debug: re
+	@echo "$(YELLOW)$(EMOJI_DONE) Debug mode activated:\n"
 
 .PHONY: all clean shaders
