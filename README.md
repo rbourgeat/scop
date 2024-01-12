@@ -51,3 +51,7 @@ make debug
 ## Sources
 
 - https://vulkan-tutorial.com
+
+## ToDo List to optimize
+
+- [ ] https://developer.nvidia.com/vulkan-memory-management
