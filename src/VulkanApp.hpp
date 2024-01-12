@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/12 06:58:04 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/12 07:17:38 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,14 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f}, {1.0f, 0.3f, 0.3f}},
-    {{0.5f, 0.5f}, {0.3f, 1.0f, 0.3f}},
-    {{-0.5f, 0.5f}, {0.3f, 0.3f, 1.0f}}
+    {{-0.5f, -0.5f}, {1.0f, 0.3f, 0.3f}},
+    {{0.5f, -0.5f}, {0.3f, 1.0f, 0.3f}},
+    {{0.5f, 0.5f}, {0.3f, 0.3f, 1.3f}},
+    {{-0.5f, 0.5f}, {0.3f, 0.3f, 0.3f}}
+};
+
+const std::vector<uint16_t> indices = {
+    0, 1, 2, 2, 3, 0
 };
 
 class VulkanApp {
@@ -144,6 +149,8 @@ private:
 
     VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
+    VkBuffer indexBuffer;
+    VkDeviceMemory indexBufferMemory;
 
     VkCommandPool commandPool;
     std::vector<VkCommandBuffer> commandBuffers;
@@ -222,6 +229,12 @@ private:
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+    /* ================================= **
+    ** Index buffers                     **
+    ** File: VulkanIndex.cpp             **
+    ** ================================= */
+    void createIndexBuffer();
 
     /* ================================= **
     ** Parsing files                     **
