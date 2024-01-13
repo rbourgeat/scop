@@ -20,8 +20,8 @@ Macos:
 
 ```bash
 brew install glfw
-# replace 1.3.268.1 by your VulkanSDK version
-export DYLD_LIBRARY_PATH=/Users/$USER/VulkanSDK/1.3.268.1/macOS/lib/:$DYLD_LIBRARY_PATH
+
+export DYLD_LIBRARY_PATH=/Users/$USER/VulkanSDK/$(ls -1 "/Users/$USER/VulkanSDK" | sort -V | tail -n 1)/macOS/lib/:$DYLD_LIBRARY_PATH
 ```
 
 ## Build
