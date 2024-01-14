@@ -6,14 +6,14 @@
 #    By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/09 07:51:01 by rbourgea          #+#    #+#              #
-#    Updated: 2024/01/13 13:49:59 by rbourgea         ###   ########.fr        #
+#    Updated: 2024/01/14 18:12:07 by rbourgea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 TIME = $(shell date +%s.%N)
 
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -g
+CXXFLAGS = -std=c++20 -Wall -Wextra -g
 LDFLAGS = -ldl
 
 UNAME_S := $(shell uname -s)
@@ -62,7 +62,7 @@ $(EXECUTABLE): $(OBJ_FILES)
 
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "$(YELLOW)$(EMOJI_BUILD) Compiling $(BOLD)$<$(NC)"
-	@$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@ > /dev/null 2>&1
+	@$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
 shaders:
 	@echo "$(LINE_SEPARATOR)"

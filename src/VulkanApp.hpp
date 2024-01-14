@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/12 07:17:38 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/14 18:11:54 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,16 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
+#include <chrono>
 #include <limits>
 #include <optional>
 #include <array>
 #include <set>
+
+// #include <glm/glm.hpp>
+// #include <glm/gtc/matrix_transform.hpp>
+
+#include "Math.hpp"
 
 inline const char* TITLE = "scop";
 const uint32_t WIDTH = 800;
@@ -70,17 +76,9 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
-struct Vec2 {
-    float x, y;
-};
-
-struct Vec3 {
-    float r, g, b;
-};
-
 struct Vertex {
-    Vec2 pos;
-    Vec3 color;
+    vec2 pos;
+    vec3 color;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -106,6 +104,12 @@ struct Vertex {
 
         return attributeDescriptions;
     }
+};
+
+struct UniformBufferObject {
+    alignas(16) mat4 model;
+    alignas(16) mat4 view;
+    alignas(16) mat4 proj;
 };
 
 const std::vector<Vertex> vertices = {
@@ -144,6 +148,7 @@ private:
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
     VkRenderPass renderPass;
+    VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
@@ -151,6 +156,13 @@ private:
     VkDeviceMemory vertexBufferMemory;
     VkBuffer indexBuffer;
     VkDeviceMemory indexBufferMemory;
+
+    std::vector<VkBuffer> uniformBuffers;
+    std::vector<VkDeviceMemory> uniformBuffersMemory;
+    std::vector<void*> uniformBuffersMapped;
+
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
 
     VkCommandPool commandPool;
     std::vector<VkCommandBuffer> commandBuffers;
@@ -209,6 +221,11 @@ private:
     void createRenderPass();
     VkShaderModule createShaderModule(const std::vector<char>& code);
     void createGraphicsPipeline();
+    void createDescriptorSetLayout();
+    void createUniformBuffers();
+    void updateUniformBuffer(uint32_t currentImage);
+    void createDescriptorPool();
+    void createDescriptorSets();
 
     /* ================================= **
     ** Vulkan render                     **
@@ -275,11 +292,16 @@ private:
     }
 
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+        (void)messageSeverity;
+        (void)messageType;
+        (void)pUserData;
         std::cerr << "- Validation layer: " << pCallbackData->pMessage << std::endl;
         return VK_FALSE;
     }
 
     static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+        (void)width;
+        (void)height;
         auto app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
     }

@@ -2,7 +2,7 @@
 
 Basic 3D model viewer made with Vulkan, C++ and GLFW.
 
-![example](https://media.discordapp.net/attachments/859094290667143168/1195341166397374537/VirtualBox_ubuntu_12_01_2024_13_18_15.png?ex=65b3a336&is=65a12e36&hm=445ea2cc7007832f52a95a4d099e3ad104840f3e9cf34ff39c9882d1e993d26c&=&format=webp&quality=lossless)
+![example](https://media.discordapp.net/attachments/1192056446389583874/1196157286629003264/Capture_decran_2024-01-14_a_19.21.15.png?ex=65b69b48&is=65a42648&hm=2644aa57d434f771fec8f64c117ebb027b8d09705667ed4eebd19a0bcd10cce8&=&format=webp&quality=lossless)
 
 ## Pre-requisites
 
