@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/14 18:11:54 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/14 20:05:21 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,8 @@
 #include <array>
 #include <set>
 
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-
 #include "Math.hpp"
+#include "Image.hpp"
 
 inline const char* TITLE = "scop";
 const uint32_t WIDTH = 800;
@@ -152,6 +150,9 @@ private:
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
 
+    VkImage textureImage;
+    VkDeviceMemory textureImageMemory;
+
     VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
     VkBuffer indexBuffer;
@@ -237,6 +238,8 @@ private:
     void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
     void createSyncObjects();
     void drawFrame();
+    VkCommandBuffer beginSingleTimeCommands();
+    void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
     /* ================================= **
     ** Vertex buffers                    **
@@ -252,6 +255,15 @@ private:
     ** File: VulkanIndex.cpp             **
     ** ================================= */
     void createIndexBuffer();
+   
+    /* ================================= **
+    ** Images and Textures               **
+    ** File: VulkanTexture.cpp           **
+    ** ================================= */ 
+    void createTextureImage();
+    void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+    void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+    void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
     /* ================================= **
     ** Parsing files                     **

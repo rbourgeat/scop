@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:57:10 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/13 19:04:03 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/14 20:08:38 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void VulkanApp::cleanup() {
     }
 
     vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+
+    vkDestroyImage(device, textureImage, nullptr);
+    vkFreeMemory(device, textureImageMemory, nullptr);
 
     vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
