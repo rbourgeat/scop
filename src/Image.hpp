@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 19:51:52 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 07:07:23 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 10:45:56 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,36 @@ public:
             // Extract width and height from BMP header
             width = *reinterpret_cast<int*>(&buffer[18]);
             height = *reinterpret_cast<int*>(&buffer[22]);
-            channels = *reinterpret_cast<short*>(&buffer[28]);  // Assuming 24 or 32 bits per pixel
+            channels = *reinterpret_cast<short*>(&buffer[28]);
 
-            // Add an alpha channel if needed (assuming 32 bits per pixel)
-            if (channels == 24) {
+            if (channels == 24 || channels == 32) {
+                // Handle 24-bit and 32-bit images
+                int bytesPerPixel = channels / 8;
+                int padding = (4 - (width * bytesPerPixel) % 4) % 4;
+
                 std::vector<unsigned char> newBuffer(width * height * 4);
 
-                for (int i = 0; i < height; ++i) {  // Iterate over rows
-                    for (int j = 0; j < width; ++j) {  // Iterate over columns
-                        int inputIndex = (height - i - 1) * width + j;  // Invert Y-axis
+                for (int i = 0; i < height; ++i) {
+                    for (int j = 0; j < width; ++j) {
+                        int inputIndex = (height - i - 1) * (width * bytesPerPixel + padding) + j * bytesPerPixel;
                         int outputIndex = i * width + j;
-                        newBuffer[outputIndex * 4] = buffer[inputIndex * 3 + 2];
-                        newBuffer[outputIndex * 4 + 1] = buffer[inputIndex * 3 + 1];
-                        newBuffer[outputIndex * 4 + 2] = buffer[inputIndex * 3];
-                        newBuffer[outputIndex * 4 + 3] = 255;  // Fully opaque alpha channel
+
+                        newBuffer[outputIndex * 4] = buffer[inputIndex + 2];
+                        newBuffer[outputIndex * 4 + 1] = buffer[inputIndex + 1];
+                        newBuffer[outputIndex * 4 + 2] = buffer[inputIndex];
+                        newBuffer[outputIndex * 4 + 3] = (channels == 24) ? 255 : buffer[inputIndex + 3];
                     }
                 }
 
                 buffer = std::move(newBuffer);
                 channels = 4;
+            } else {
+                throw std::runtime_error("Unsupported image channel count. Only 24-bit and 32-bit images are supported.");
             }
         } else {
-            throw std::runtime_error("Unsupported image format. Only BMP is supported in this example.");
+            throw std::runtime_error("Unsupported image format. Only BMP is supported.");
         }
 
-        // Close the file
         file.close();
 
         return buffer;

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 07:11:14 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 08:48:58 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,6 @@ struct UniformBufferObject {
     alignas(16) mat4 view;
     alignas(16) mat4 proj;
 };
-
-// const std::vector<Vertex> vertices = {
-//     {{-0.5f, -0.5f}, {1.0f, 0.3f, 0.3f}},
-//     {{0.5f, -0.5f}, {0.3f, 1.0f, 0.3f}},
-//     {{0.5f, 0.5f}, {0.3f, 0.3f, 1.3f}},
-//     {{-0.5f, 0.5f}, {0.3f, 0.3f, 0.3f}}
-// };
 
 const std::vector<Vertex> vertices = {
     {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},

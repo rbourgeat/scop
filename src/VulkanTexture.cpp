@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 19:54:29 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 06:53:15 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 10:51:10 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void VulkanApp::createTextureImage() {
     int texWidth, texHeight, texChannels;
-    std::vector<unsigned char> pixels = Image::loadImage("textures/texture.bmp", texWidth, texHeight, texChannels);
+    std::vector<unsigned char> pixels = Image::loadImage("textures/stone.bmp", texWidth, texHeight, texChannels);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
 
     if (pixels.empty()) {
@@ -111,7 +111,7 @@ void VulkanApp::transitionImageLayout(VkImage image, VkFormat format, VkImageLay
         sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     } else {
-        throw std::invalid_argument("unsupported layout transition!");
+        throw std::invalid_argument("Unsupported layout transition !");
     }
 
     vkCmdPipelineBarrier(
