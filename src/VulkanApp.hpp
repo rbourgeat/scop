@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 08:48:58 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 20:00:39 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,9 @@ public:
 
 private:
     GLFWwindow* window;
+    float rotationAngle;
+    float targetRotation;
+    bool autoRotate = false;
 
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
@@ -280,6 +283,40 @@ private:
     ** File: Parsing.cpp                 **
     ** ================================= */
     static std::vector<char> readFile(const std::string& filename);
+    
+    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        (void)mods;
+        (void)scancode;
+        auto app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
+
+        if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+            float rotation = 0.05f;
+
+            switch (key) {
+                case GLFW_KEY_LEFT:
+                    app->rotateModel(-rotation);  // left
+                    break;
+                case GLFW_KEY_RIGHT:
+                    app->rotateModel(rotation);   // right
+                    break;
+                case GLFW_KEY_UP:
+                    app->rotateModel(0.0f);       // top
+                    break;
+                case GLFW_KEY_DOWN:
+                    app->rotateModel(0.0f);       // bottom
+                    break;
+                case GLFW_KEY_R:
+                    app->autoRotate = !app->autoRotate;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    void rotateModel(float angle) {
+        rotationAngle += angle;
+    }
 
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
         QueueFamilyIndices indices;

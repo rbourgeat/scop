@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/14 19:20:27 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:34:21 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,10 @@ public:
 
 class math {
 public:
+    static float lerp(float a, float b, float t) {
+        return a + t * (b - a);
+    }
+
     static float radians(float degrees) {
         return degrees * 0.0174533f;
     }

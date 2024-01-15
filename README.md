@@ -50,10 +50,19 @@ make debug
 ./scop
 ```
 
+## Inputs
+
+- → : rotate right
+
+- ← : rotate left
+
+- R : auto rotate
+
 ## Sources
 
 - https://vulkan-tutorial.com
 
 ## ToDo List to optimize
 
+- [ ] Add more smooth keyboard rotation
 - [ ] https://developer.nvidia.com/vulkan-memory-management

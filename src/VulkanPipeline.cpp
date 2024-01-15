@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 09:40:53 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:52:48 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,11 +228,9 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-    // time = 0.0f;
-
     UniformBufferObject ubo{};
     
-    mat4 modelMatrix = math::rotate(time * math::radians(90.0f), vec3(0.0f, 0.0f, 1.0f));
+    mat4 modelMatrix = math::rotate((autoRotate ? time : rotationAngle) * math::radians(90.0f), vec3(0.0f, 0.0f, 1.0f));
     ubo.model = modelMatrix;
 
     vec3 eye(2.0f, 2.0f, 2.0f);
@@ -244,10 +242,6 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
-    
-    // std::cout << "Model Matrix:\n" << ubo.model << std::endl;
-    // std::cout << "View Matrix:\n" << ubo.view << std::endl;
-    // std::cout << "Proj Matrix:\n" << ubo.proj << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
