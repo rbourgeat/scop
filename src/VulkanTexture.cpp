@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 19:54:29 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 05:38:17 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/15 06:53:15 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void VulkanApp::createTextureImage() {
     int texWidth, texHeight, texChannels;
-    std::vector<uint8_t> pixels = Image::loadImage("textures/texture.jpeg", texWidth, texHeight, texChannels);
+    std::vector<unsigned char> pixels = Image::loadImage("textures/texture.bmp", texWidth, texHeight, texChannels);
     VkDeviceSize imageSize = texWidth * texHeight * 4;
 
     if (pixels.empty()) {
@@ -78,6 +78,8 @@ void VulkanApp::createImage(uint32_t width, uint32_t height, VkFormat format, Vk
 }
 
 void VulkanApp::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
+    (void)format;
+    
     VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
     VkImageMemoryBarrier barrier{};
