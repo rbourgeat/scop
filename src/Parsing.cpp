@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 11:03:15 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 11:13:48 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
-        return;
+        std::exit(0);
     }
 
     std::vector<vec3> positions;

@@ -47,7 +47,7 @@ make debug
 ## Run
 
 ```bash
-./scop
+./scop "path/to/file.obj"
 ```
 
 ## Inputs

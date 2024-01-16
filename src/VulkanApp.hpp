@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 10:43:51 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 11:10:51 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ struct UniformBufferObject {
 
 class VulkanApp {
 public:
-    void run();
+    void run(const std::string& objFile1);
 
 private:
     GLFWwindow* window;

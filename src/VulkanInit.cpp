@@ -6,13 +6,14 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:50:01 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 11:02:04 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 11:11:42 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "VulkanApp.hpp"
 
-void VulkanApp::run() {
+void VulkanApp::run(const std::string& objFile) {
+    parseObjFile(objFile);
     initWindow();
     initVulkan();
     mainLoop();
@@ -23,8 +24,6 @@ void VulkanApp::initWindow() {
     glfwInit();
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-    parseObjFile("resources/teapot.obj");
 
     window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, nullptr, nullptr);
     glfwSetWindowUserPointer(window, this);
