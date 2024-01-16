@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 06:54:07 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 09:37:49 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,9 +151,9 @@ public:
 private:
     GLFWwindow* window;
     
-    float xRotation;
-    float yRotation;
-    float zRotation;
+    float xRotation = 0;
+    float yRotation = 0;
+    float zRotation = 0;
     bool autoRotate = false;
 
     double lastMouseX = 0.0;
@@ -325,33 +325,27 @@ private:
 
             switch (key) {
                 case GLFW_KEY_LEFT:
-                    app->rotateModel(-rotation, 3);  // left
+                    app->yRotation += rotation;  // left
                     break;
                 case GLFW_KEY_RIGHT:
-                    app->rotateModel(rotation, 3);   // right
+                    app->yRotation -= rotation;  // right
                     break;
                 case GLFW_KEY_UP:
-                    app->rotateModel(rotation, 1);  // top
+                    app->xRotation += rotation;  // top
                     break;
                 case GLFW_KEY_DOWN:
-                    app->rotateModel(-rotation, 1); // bottom
+                    app->xRotation -= rotation;  // bottom
                     break;
                 case GLFW_KEY_R:
                     app->autoRotate = !app->autoRotate;
                     break;
+                case GLFW_KEY_SPACE:
+                    app->xRotation = 0;
+                    app->yRotation = 0;
+                    app->zRotation = 0;
                 default:
                     break;
             }
-        }
-    }
-
-    void rotateModel(float angle, int rotation) {
-        if (rotation == 1) {
-            xRotation += angle;
-        } else if (rotation == 2) {
-            yRotation += angle;
-        } else {
-            zRotation += angle;
         }
     }
 
@@ -378,8 +372,6 @@ private:
 
             app->xRotation += deltaX * 0.01f;
             app->yRotation += deltaY * 0.01f;
-
-            std::cout << "X Rotation: " << app->xRotation << ", Y Rotation: " << app->yRotation << std::endl;
 
             app->lastMouseX = xpos;
             app->lastMouseY = ypos;

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 07:02:20 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 09:43:39 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,19 +253,18 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
+    if (autoRotate) {
+        zRotation = time;
+    }
+
     UniformBufferObject ubo{};
 
-    vec3 objectCenter(0.0f, 0.0f, 0.0f);
-    mat4 translateToOrigin = math::translate(mat4(), -objectCenter);
-    
     mat4 x = math::rotate(xRotation, vec3(1.0f, 0.0f, 0.0f));
     mat4 y = math::rotate(yRotation, vec3(0.0f, 1.0f, 0.0f));
-    mat4 z = math::rotate((autoRotate ? time : zRotation), vec3(0.0f, 0.0f, 1.0f));
-    
-    mat4 modelMatrix = translateToOrigin * x * y * z;
-    
-    mat4 translateBack = math::translate(mat4(), objectCenter);
-    ubo.model = translateBack * modelMatrix;
+    mat4 z = math::rotate(zRotation, vec3(0.0f, 0.0f, 1.0f));
+
+    mat4 modelMatrix = x * y * z;
+    ubo.model = modelMatrix;
 
     vec3 eye(2.0f, 2.0f, 2.0f);
     vec3 center(0.0f, 0.0f, 0.0f);
@@ -276,6 +275,8 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
+
+    std::cout << "X Rotation: " << xRotation << ", Y Rotation: " << yRotation << ", Z Rotation: " << zRotation << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

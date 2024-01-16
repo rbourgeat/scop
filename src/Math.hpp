@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 06:30:20 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 08:59:26 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,12 @@ public:
 
 class math {
 public:
+    static vec3 normalize(const vec3& v) {
+        vec3 result = v;
+        result.normalize();
+        return result;
+    }
+
     static float lerp(float a, float b, float t) {
         return a + t * (b - a);
     }
