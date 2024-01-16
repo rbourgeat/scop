@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 09:43:39 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 10:27:59 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,7 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
 
-    std::cout << "X Rotation: " << xRotation << ", Y Rotation: " << yRotation << ", Z Rotation: " << zRotation << std::endl;
+    // std::cout << "X Rotation: " << xRotation << ", Y Rotation: " << yRotation << ", Z Rotation: " << zRotation << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

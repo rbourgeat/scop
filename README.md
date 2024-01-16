@@ -58,6 +58,8 @@ make debug
 
 - R : auto rotate
 
+- SPACE : reset rotation
+
 ## Sources
 
 - https://vulkan-tutorial.com
