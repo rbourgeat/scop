@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 20:00:39 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 06:35:24 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,15 @@ public:
 
 private:
     GLFWwindow* window;
-    float rotationAngle;
-    float targetRotation;
+    
+    float xRotation;
+    float yRotation;
+    float zRotation;
     bool autoRotate = false;
+
+    double lastMouseX = 0.0;
+    double lastMouseY = 0.0;
+    bool mouseDrag = false;
 
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
@@ -294,16 +300,16 @@ private:
 
             switch (key) {
                 case GLFW_KEY_LEFT:
-                    app->rotateModel(-rotation);  // left
+                    app->rotateModel(-rotation, 3);  // left
                     break;
                 case GLFW_KEY_RIGHT:
-                    app->rotateModel(rotation);   // right
+                    app->rotateModel(rotation, 3);   // right
                     break;
                 case GLFW_KEY_UP:
-                    app->rotateModel(0.0f);       // top
+                    app->rotateModel(rotation, 1);  // top
                     break;
                 case GLFW_KEY_DOWN:
-                    app->rotateModel(0.0f);       // bottom
+                    app->rotateModel(-rotation, 1); // bottom
                     break;
                 case GLFW_KEY_R:
                     app->autoRotate = !app->autoRotate;
@@ -314,8 +320,45 @@ private:
         }
     }
 
-    void rotateModel(float angle) {
-        rotationAngle += angle;
+    void rotateModel(float angle, int rotation) {
+        if (rotation == 1) {
+            xRotation += angle;
+        } else if (rotation == 2) {
+            yRotation += angle;
+        } else {
+            zRotation += angle;
+        }
+    }
+
+    static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+        (void)mods;
+        VulkanApp* app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
+
+        if (button == GLFW_MOUSE_BUTTON_LEFT) {
+            if (action == GLFW_PRESS) {
+                app->mouseDrag = true;
+                glfwGetCursorPos(window, &app->lastMouseX, &app->lastMouseY);
+            } else if (action == GLFW_RELEASE) {
+                app->mouseDrag = false;
+            }
+        }
+    }
+
+    static void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
+        VulkanApp* app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
+
+        if (app->mouseDrag) {
+            float deltaX = static_cast<float>(xpos - app->lastMouseX);
+            float deltaY = static_cast<float>(ypos - app->lastMouseY);
+
+            app->xRotation += deltaX * 0.01f;
+            app->yRotation += deltaY * 0.01f;
+
+            std::cout << "X Rotation: " << app->xRotation << ", Y Rotation: " << app->yRotation << std::endl;
+
+            app->lastMouseX = xpos;
+            app->lastMouseY = ypos;
+        }
     }
 
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {

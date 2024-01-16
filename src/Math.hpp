@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 19:34:21 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 06:30:20 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ public:
     // Constructors
     vec3() : x(0.0f), y(0.0f), z(0.0f) {}
     vec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+
+    // Unary minus operator
+    vec3 operator-() const {
+        return vec3(-x, -y, -z);
+    }
 
     // Basic operations
     vec3 operator+(const vec3& other) const {
@@ -146,6 +151,15 @@ public:
         return elements[row][col];
     }
 
+    // Matrix subtraction
+    mat4 operator-(const mat4& other) const {
+        mat4 result;
+        for (int i = 0; i < 4; ++i)
+            for (int j = 0; j < 4; ++j)
+                result(i, j) = elements[i][j] - other(i, j);
+        return result;
+    }
+
     // Matrix multiplication
     mat4 operator*(const mat4& other) const {
         mat4 result;
@@ -185,6 +199,16 @@ public:
 
     static float radians(float degrees) {
         return degrees * 0.0174533f;
+    }
+
+    static mat4 translate(const mat4& matrix, const vec3& translation) {
+        mat4 result = matrix;
+
+        result(3, 0) += translation.x;
+        result(3, 1) += translation.y;
+        result(3, 2) += translation.z;
+
+        return result;
     }
 
     static mat4 rotate(float angle, const vec3& axis) {

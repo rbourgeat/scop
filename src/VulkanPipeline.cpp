@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 19:52:48 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/16 06:34:44 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ VkShaderModule VulkanApp::createShaderModule(const std::vector<char>& code) {
 
     VkShaderModule shaderModule;
     if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create shader module!");
+        throw std::runtime_error("Failed to create shader module !");
     }
 
     return shaderModule;
@@ -229,9 +229,18 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     UniformBufferObject ubo{};
+
+    vec3 objectCenter(0.0f, 0.0f, 0.0f);
+    mat4 translateToOrigin = math::translate(mat4(), -objectCenter);
     
-    mat4 modelMatrix = math::rotate((autoRotate ? time : rotationAngle) * math::radians(90.0f), vec3(0.0f, 0.0f, 1.0f));
-    ubo.model = modelMatrix;
+    mat4 x = math::rotate(xRotation, vec3(1.0f, 0.0f, 0.0f));
+    mat4 y = math::rotate(yRotation, vec3(0.0f, 1.0f, 0.0f));
+    mat4 z = math::rotate((autoRotate ? time : zRotation), vec3(0.0f, 0.0f, 1.0f));
+    
+    mat4 modelMatrix = translateToOrigin * x * y * z;
+    
+    mat4 translateBack = math::translate(mat4(), objectCenter);
+    ubo.model = translateBack * modelMatrix;
 
     vec3 eye(2.0f, 2.0f, 2.0f);
     vec3 center(0.0f, 0.0f, 0.0f);
