@@ -6,7 +6,7 @@
 #    By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/09 07:51:01 by rbourgea          #+#    #+#              #
-#    Updated: 2024/01/15 06:42:55 by rbourgea         ###   ########.fr        #
+#    Updated: 2024/01/17 10:10:25 by rbourgea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ TIME = $(shell date +%s.%N)
 
 CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra -g
-LDFLAGS = -ldl
+LDFLAGS = -ldl # -fsanitize=address
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)

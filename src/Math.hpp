@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/17 07:32:58 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 09:58:25 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,6 +339,12 @@ public:
         projMatrix(2, 2) = -(far + near) / (far - near);
         projMatrix(2, 3) = -1.0f;
         projMatrix(3, 2) = -(2.0f * far * near) / (far - near);
+
+#ifdef MATH_FORCE_DEPTH_ZERO_TO_ONE
+        // Adjust projection matrix for [0, 1] depth range
+        projMatrix(2, 2) = -2.0f / (far - near);
+        projMatrix(2, 3) = -(far + near) / (far - near);
+#endif
 
         return projMatrix;
     }

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/17 08:37:43 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 11:19:27 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include <array>
 #include <set>
 
+#define MATH_FORCE_DEPTH_ZERO_TO_ONE
 #include "Math.hpp"
 #include "Image.hpp"
 
