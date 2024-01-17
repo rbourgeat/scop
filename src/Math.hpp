@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 08:59:26 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 07:32:58 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,63 @@ public:
     }
 };
 
+class quat {
+public:
+    float x, y, z, w;
+
+    // Constructors
+    quat() : x(0.0f), y(0.0f), z(0.0f), w(1.0f) {}
+    quat(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
+
+    // Quaternion multiplication
+    quat operator*(const quat& other) const {
+        return quat(
+            w * other.x + x * other.w + y * other.z - z * other.y,
+            w * other.y + y * other.w + z * other.x - x * other.z,
+            w * other.z + z * other.w + x * other.y - y * other.x,
+            w * other.w - x * other.x - y * other.y - z * other.z
+        );
+    }
+
+    // Normalize the quaternion
+    quat normalize() const {
+        float len = std::sqrt(x * x + y * y + z * z + w * w);
+        if (len != 0.0f)
+            return quat(x / len, y / len, z / len, w / len);
+        else
+            return *this;
+    }
+
+    // Convert quaternion to a 4x4 matrix (rotation matrix)
+    mat4 toMat4() const {
+        float xx = x * x;
+        float xy = x * y;
+        float xz = x * z;
+        float xw = x * w;
+        float yy = y * y;
+        float yz = y * z;
+        float yw = y * w;
+        float zz = z * z;
+        float zw = z * w;
+
+        mat4 result;
+
+        result[0][0] = 1.0f - 2.0f * (yy + zz);
+        result[0][1] = 2.0f * (xy - zw);
+        result[0][2] = 2.0f * (xz + yw);
+
+        result[1][0] = 2.0f * (xy + zw);
+        result[1][1] = 1.0f - 2.0f * (xx + zz);
+        result[1][2] = 2.0f * (yz - xw);
+
+        result[2][0] = 2.0f * (xz - yw);
+        result[2][1] = 2.0f * (yz + xw);
+        result[2][2] = 1.0f - 2.0f * (xx + yy);
+
+        return result;
+    }
+};
+
 class math {
 public:
     static vec3 normalize(const vec3& v) {
@@ -205,6 +262,10 @@ public:
 
     static float radians(float degrees) {
         return degrees * 0.0174533f;
+    }
+
+    static float degrees(float radians) {
+        return radians * 57.2958f; // 180/π
     }
 
     static mat4 translate(const mat4& matrix, const vec3& translation) {
@@ -280,6 +341,20 @@ public:
         projMatrix(3, 2) = -(2.0f * far * near) / (far - near);
 
         return projMatrix;
+    }
+
+    static vec3 cross(const vec3& a, const vec3& b) {
+        return vec3(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+    }
+
+    static quat angleAxis(float angle, const vec3& axis) {
+        float halfAngle = angle * 0.5f;
+        float sinHalf = std::sin(halfAngle);
+        return quat(axis.x * sinHalf, axis.y * sinHalf, axis.z * sinHalf, std::cos(halfAngle)).normalize();
+    }
+
+    static mat4 toMat4(const quat& q) {
+        return q.toMat4();
     }
 };
 

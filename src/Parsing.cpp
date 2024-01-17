@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 11:13:48 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 08:36:07 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,18 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             colors.push_back(vec3(r, g, b));
         } else if (type == "f") {
             for (int i = 0; i < 3; ++i) {
-                int vertexIndex;
+                int vertexIndex, texCoordIndex;
                 iss >> vertexIndex;
 
                 // Adjust indices to 0-based
                 vertexIndex--;
+
+                // Check if texture coordinates are provided
+                if (texCoords.size() > 0) {
+                    iss.ignore();
+                    iss >> texCoordIndex;
+                    texCoordIndex--;
+                }
 
                 Vertex vertex;
                 vertex.pos = positions[vertexIndex];

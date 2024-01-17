@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 11:10:51 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 08:37:43 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,12 @@ struct SwapChainSupportDetails {
     std::vector<VkPresentModeKHR> presentModes;
 };
 
+struct Camera {
+    vec3 eye;
+    vec3 center;
+    vec3 up;
+};
+
 struct Vertex {
     vec3 pos;
     vec3 color;
@@ -123,7 +129,7 @@ struct UniformBufferObject {
 //     {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
 // };
 
-// const std::vector<uint16_t> indices = {
+// const std::vector<uint32_t> indices = {
 //     0, 1, 2, 2, 3, 0
 // };
 
@@ -139,7 +145,7 @@ struct UniformBufferObject {
 //     {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
 // };
 
-// const std::vector<uint16_t> indices = {
+// const std::vector<uint32_t> indices = {
 //     0, 1, 2, 2, 3, 0,
 //     4, 5, 6, 6, 7, 4
 // };
@@ -150,6 +156,12 @@ public:
 
 private:
     GLFWwindow* window;
+
+    Camera cameraView {
+        vec3(5.0f, 5.0f, 5.0f),
+        vec3(0.0f, 0.0f, 0.0f),
+        vec3(0.0f, 1.0f, 0.0f)
+    };
     
     float xRotation = 0;
     float yRotation = 0;
@@ -161,7 +173,7 @@ private:
     bool mouseDrag = false;
 
     std::vector<Vertex> vertices;
-    std::vector<uint16_t> indices;
+    std::vector<uint32_t> indices;
 
     VkInstance instance;
     VkDebugUtilsMessengerEXT debugMessenger;
@@ -318,7 +330,7 @@ private:
     ** ================================= */
     void parseObjFile(const std::string& filename);
     static std::vector<char> readFile(const std::string& filename);
-    
+
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
         (void)mods;
         (void)scancode;
@@ -374,8 +386,8 @@ private:
             float deltaX = static_cast<float>(xpos - app->lastMouseX);
             float deltaY = static_cast<float>(ypos - app->lastMouseY);
 
-            app->xRotation += deltaX * 0.01f;
-            app->yRotation += deltaY * 0.01f;
+            app->xRotation += deltaY * -0.1f;
+            app->yRotation += deltaX * -0.1f;
 
             app->lastMouseX = xpos;
             app->lastMouseY = ypos;

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:50:01 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 11:11:42 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 07:52:30 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void VulkanApp::initWindow() {
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
     glfwSetKeyCallback(window, keyCallback);
     glfwSetMouseButtonCallback(window, VulkanApp::mouseButtonCallback);
-    glfwSetCursorPosCallback(window, VulkanApp::cursorPosCallback);
+    glfwSetCursorPosCallback(window, cursorPosCallback);
 }
 
 void VulkanApp::mainLoop() {

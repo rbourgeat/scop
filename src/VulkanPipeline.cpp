@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 10:27:59 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/17 08:16:01 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,35 +248,30 @@ void VulkanApp::createUniformBuffers() {
 }
 
 void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
-    static auto startTime = std::chrono::high_resolution_clock::now();
-
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
     if (autoRotate) {
-        zRotation = time;
+        yRotation += 0.02f;
     }
 
     UniformBufferObject ubo{};
 
-    mat4 x = math::rotate(xRotation, vec3(1.0f, 0.0f, 0.0f));
-    mat4 y = math::rotate(yRotation, vec3(0.0f, 1.0f, 0.0f));
-    mat4 z = math::rotate(zRotation, vec3(0.0f, 0.0f, 1.0f));
+    quat xRotationQuat = math::angleAxis(math::radians(xRotation), vec3(1.0f, 0.0f, 0.0f));
+    quat yRotationQuat = math::angleAxis(math::radians(yRotation), vec3(0.0f, 1.0f, 0.0f));
+    quat zRotationQuat = math::angleAxis(math::radians(zRotation), vec3(0.0f, 0.0f, 1.0f));
 
-    mat4 modelMatrix = x * y * z;
+    quat totalRotationQuat = xRotationQuat * yRotationQuat * zRotationQuat;
+
+    mat4 modelMatrix = math::toMat4(totalRotationQuat);
     ubo.model = modelMatrix;
 
-    vec3 eye(2.0f, 2.0f, 2.0f);
-    vec3 center(0.0f, 0.0f, 0.0f);
-    vec3 up(0.0f, 0.0f, 1.0f);
-    mat4 viewMatrix = math::lookAt(eye, center, up);
+    mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
     ubo.view = viewMatrix;
 
     mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
 
-    // std::cout << "X Rotation: " << xRotation << ", Y Rotation: " << yRotation << ", Z Rotation: " << zRotation << std::endl;
+    std::cout << "X Rotation: " << xRotation << ", Y Rotation: " << yRotation << ", Z Rotation: " << zRotation << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
