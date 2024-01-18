@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 06:51:28 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 07:35:37 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,14 @@ void VulkanApp::createGraphicsPipeline() {
     ambientColorAttributeDescription.offset = offsetof(Vertex, ambientColor);
 
     attributeDescriptions[2] = ambientColorAttributeDescription;
+
+    VkVertexInputAttributeDescription specularColorAttributeDescription{};
+    specularColorAttributeDescription.binding = 0;
+    specularColorAttributeDescription.location = 4;
+    specularColorAttributeDescription.format = VK_FORMAT_R32G32B32_SFLOAT;
+    specularColorAttributeDescription.offset = offsetof(Vertex, specularColor);
+
+    attributeDescriptions[3] = specularColorAttributeDescription;
 
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());

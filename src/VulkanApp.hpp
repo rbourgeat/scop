@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 06:57:24 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 07:36:38 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ struct Vertex {
     vec3 color;
     vec2 texCoord;
     vec3 ambientColor;
+    vec3 specularColor;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -98,8 +99,8 @@ struct Vertex {
         return bindingDescription;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions() {
-        std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
+    static std::array<VkVertexInputAttributeDescription, 5> getAttributeDescriptions() {
+        std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -120,6 +121,11 @@ struct Vertex {
         attributeDescriptions[3].location = 3;
         attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[3].offset = offsetof(Vertex, ambientColor);
+
+        attributeDescriptions[4].binding = 0;
+        attributeDescriptions[4].location = 4;
+        attributeDescriptions[4].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[4].offset = offsetof(Vertex, specularColor);
 
         return attributeDescriptions;
     }
@@ -267,6 +273,7 @@ private:
     ** ================================= */
     void cleanup();
     void cleanupSwapChain();
+    void cleanupVertexBuffer();
 
     /* ================================= **
     ** Vulkan debug logs                 **
@@ -369,6 +376,28 @@ private:
                     app->xRotation = 0;
                     app->yRotation = 0;
                     app->zRotation = 0;
+                    break;
+                case GLFW_KEY_1:
+                    for (auto& vertex : app->vertices) {
+                        vertex.color = vec3(1.0, 0.4, 0.4);
+                    }
+                    app->cleanupVertexBuffer();
+                    app->createVertexBuffer();
+                    break;
+                case GLFW_KEY_2:
+                    for (auto& vertex : app->vertices) {
+                        vertex.color = vec3(0.4, 1.0, 0.4);
+                    }
+                    app->cleanupVertexBuffer();
+                    app->createVertexBuffer();
+                    break;
+                case GLFW_KEY_3:
+                    for (auto& vertex : app->vertices) {
+                        vertex.color = vec3(0.4, 0.4, 1.0);
+                    }
+                    app->cleanupVertexBuffer();
+                    app->createVertexBuffer();
+                    break;
                 default:
                     break;
             }

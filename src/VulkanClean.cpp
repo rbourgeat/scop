@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:57:10 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/16 07:07:34 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 07:22:02 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,16 @@ void VulkanApp::cleanupSwapChain() {
     }
 
     vkDestroySwapchainKHR(device, swapChain, nullptr);
+}
+
+void VulkanApp::cleanupVertexBuffer() {
+    if (vertexBuffer != VK_NULL_HANDLE) {
+        vkDestroyBuffer(device, vertexBuffer, nullptr);
+        vertexBuffer = VK_NULL_HANDLE;
+    }
+
+    if (vertexBufferMemory != VK_NULL_HANDLE) {
+        vkFreeMemory(device, vertexBufferMemory, nullptr);
+        vertexBufferMemory = VK_NULL_HANDLE;
+    }
 }

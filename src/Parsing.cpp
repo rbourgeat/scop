@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 07:01:00 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 07:31:31 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
                 if (!colors.empty()) {
                     vertex.color = colors[vertexIndices[j]];
+                } else {
+                    vertex.color = vec3(0.4, 1.0, 0.4);
                 }
 
                 vertices.push_back(vertex);
@@ -84,17 +86,17 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
     }
-    
+
     // Print vertices
     for (const auto& vertex : vertices) {
         std::cout << "Position    : " << "(" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")" << std::endl;
         std::cout << "TexCoord    : " << "(" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")" << std::endl;
         std::cout << "Color       : " << "(" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")" << std::endl;
         std::cout << "AmbientColor: " << "(" << vertex.ambientColor.x << ", " << vertex.ambientColor.y << ", " << vertex.ambientColor.z << ")" << std::endl;
-        std::cout << "============" << std::endl;
+        std::cout << "<==========>" << std::endl;
     }
 
-    // // Print indices
+    // Print indices
     // std::cout << "Indices:" << std::endl;
     // for (const auto& index : indices) {
     //     std::cout << index << " ";
@@ -116,6 +118,7 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
     std::string line;
     vec3 ambientColor;
     vec3 diffuseColor;
+    vec3 specularColor;
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
@@ -126,6 +129,8 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
             iss >> ambientColor.x >> ambientColor.y >> ambientColor.z;
         } else if (type == "Kd") {
             iss >> diffuseColor.x >> diffuseColor.y >> diffuseColor.z;
+        } else if (type == "Ks") {
+            iss >> specularColor.x >> specularColor.y >> specularColor.z;
         }
         // TODO: add more material properties
     }
@@ -133,6 +138,7 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
     for (auto& vertex : vertices) {
         vertex.color = diffuseColor;
         vertex.ambientColor = ambientColor;
+        vertex.specularColor = specularColor;
     }
 }
 
