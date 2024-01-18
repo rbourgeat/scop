@@ -52,19 +52,19 @@ make debug
 
 ## Inputs
 
-- → : rotate right
+- `MOUSE` : rotate 3D object
 
-- ← : rotate left
+- `SPACE` : reset position + rotation
 
-- R : auto rotate
+- `R, G, B` : color in red, green or blue
 
-- SPACE : reset rotation
+- `1, 2, 3` : increase X, Y, Z model position
 
-- 1 : color in red
+- `SHIFT` + `1, 2, 3` : decrease X, Y, Z model position
 
-- 2 : color in green
+- `4, 5, 6` : increase X, Y, Z model rotation
 
-- 3 : color in blue
+- `SHIFT` + `4, 5, 6` : decrease X, Y, Z model rotation
 
 ## Sources
 
@@ -73,5 +73,4 @@ make debug
 ## ToDo List to optimize
 
 - [ ] Add more material parameters
-- [ ] Add more smooth keyboard rotation
 - [ ] https://developer.nvidia.com/vulkan-memory-management

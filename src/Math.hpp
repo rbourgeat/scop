@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/17 09:58:25 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 08:31:44 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,14 @@ public:
     vec3 operator/(float scalar) const {
         float invScalar = 1.0f / scalar;
         return vec3(x * invScalar, y * invScalar, z * invScalar);
+    }
+
+    // Compound addition operator
+    vec3& operator+=(const vec3& other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
     }
 
     // Dot product

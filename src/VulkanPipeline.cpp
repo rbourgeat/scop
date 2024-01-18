@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 08:15:35 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 10:08:43 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,20 +270,17 @@ void VulkanApp::createUniformBuffers() {
 }
 
 void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
-
-    if (autoRotate) {
-        yRotation += 0.02f;
-    }
-
     UniformBufferObject ubo{};
 
-    quat xRotationQuat = math::angleAxis(math::radians(xRotation), vec3(1.0f, 0.0f, 0.0f));
-    quat yRotationQuat = math::angleAxis(math::radians(yRotation), vec3(0.0f, 1.0f, 0.0f));
-    quat zRotationQuat = math::angleAxis(math::radians(zRotation), vec3(0.0f, 0.0f, 1.0f));
+    quat xRotationQuat = math::angleAxis(math::radians(rotationModel.x), vec3(1.0f, 0.0f, 0.0f));
+    quat yRotationQuat = math::angleAxis(math::radians(rotationModel.y), vec3(0.0f, 1.0f, 0.0f));
+    quat zRotationQuat = math::angleAxis(math::radians(rotationModel.z), vec3(0.0f, 0.0f, 1.0f));
 
     quat totalRotationQuat = xRotationQuat * yRotationQuat * zRotationQuat;
 
-    mat4 modelMatrix = math::toMat4(totalRotationQuat);
+    mat4 translationMatrix = math::translate(mat4(), positionModel);
+
+    mat4 modelMatrix = translationMatrix * math::toMat4(totalRotationQuat);
     ubo.model = modelMatrix;
 
     mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
@@ -293,7 +290,8 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
 
-    // std::cout << "X Rotation: " << xRotation << ", Y Rotation: " << yRotation << ", Z Rotation: " << zRotation << std::endl;
+    std::cout << "rotationModel: (" << rotationModel.x << ", " << rotationModel.y << ", " << rotationModel.z << ")" << std::endl;
+    std::cout << "positionModel: (" << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << ")" << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 08:09:35 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 10:08:26 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,11 +178,9 @@ private:
         vec3(0.0f, 0.0f, 0.0f),
         vec3(0.0f, 1.0f, 0.0f)
     };
-    
-    float xRotation = 0;
-    float yRotation = 0;
-    float zRotation = 0;
-    bool autoRotate = false;
+
+    vec3 positionModel;
+    vec3 rotationModel;
 
     double lastMouseX = 0.0;
     double lastMouseY = 0.0;
@@ -351,47 +349,50 @@ private:
     static std::vector<char> readFile(const std::string& filename);
 
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        (void)mods;
         (void)scancode;
         auto app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
 
-        if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-            float rotation = 0.05f;
-
+        if ((action == GLFW_PRESS || action == GLFW_REPEAT) && !(mods & GLFW_MOD_SHIFT)) {
             switch (key) {
-                case GLFW_KEY_LEFT:
-                    app->yRotation += rotation;  // left
-                    break;
-                case GLFW_KEY_RIGHT:
-                    app->yRotation -= rotation;  // right
-                    break;
-                case GLFW_KEY_UP:
-                    app->xRotation += rotation;  // top
-                    break;
-                case GLFW_KEY_DOWN:
-                    app->xRotation -= rotation;  // bottom
-                    break;
-                case GLFW_KEY_R:
-                    app->autoRotate = !app->autoRotate;
-                    break;
-                case GLFW_KEY_SPACE:
-                    app->xRotation = 0;
-                    app->yRotation = 0;
-                    app->zRotation = 0;
-                    break;
+                // Position X, Y, Z
                 case GLFW_KEY_1:
+                    app->positionModel += vec3(1.0f, 0.0f, 0.0f);
+                    break;
+                case GLFW_KEY_2:
+                    app->positionModel += vec3(0.0f, 1.0f, 0.0f);
+                    break;
+                case GLFW_KEY_3:
+                    app->positionModel += vec3(0.0f, 0.0f, 1.0f);
+                    break;
+                // Rotation X, Y, Z
+                case GLFW_KEY_4:
+                    app->rotationModel += vec3(1.0f, 0.0f, 0.0f);
+                    break;
+                case GLFW_KEY_5:
+                    app->rotationModel += vec3(0.0f, 1.0f, 0.0f);
+                    break;
+                case GLFW_KEY_6:
+                    app->rotationModel += vec3(0.0f, 0.0f, 1.0f);
+                    break;
+                // RESET
+                case GLFW_KEY_SPACE:
+                    app->positionModel = vec3(0.0f, 0.0f, 0.0f);
+                    app->rotationModel = vec3(0.0f, 0.0f, 0.0f);
+                    break;
+                // RGB COLORS
+                case GLFW_KEY_R:
                     for (auto& vertex : app->vertices) {
                         vertex.color = vec3(1.0, 0.4, 0.4);
                     }
                     app->updateVertexBuffer();
                     break;
-                case GLFW_KEY_2:
+                case GLFW_KEY_G:
                     for (auto& vertex : app->vertices) {
                         vertex.color = vec3(0.4, 1.0, 0.4);
                     }
                     app->updateVertexBuffer();
                     break;
-                case GLFW_KEY_3:
+                case GLFW_KEY_B:
                     for (auto& vertex : app->vertices) {
                         vertex.color = vec3(0.4, 0.4, 1.0);
                     }
@@ -399,6 +400,29 @@ private:
                     break;
                 default:
                     break;
+            }
+        } else if ((action == GLFW_PRESS || action == GLFW_REPEAT) && (mods & GLFW_MOD_SHIFT)) {
+            switch (key) {
+            // Position X, Y, Z
+            case GLFW_KEY_1:
+                app->positionModel += vec3(-1.0f, 0.0f, 0.0f);
+                break;
+            case GLFW_KEY_2:
+                app->positionModel += vec3(0.0f, -1.0f, 0.0f);
+                break;
+            case GLFW_KEY_3:
+                app->positionModel += vec3(0.0f, 0.0f, -1.0f);
+                break;
+            // Rotation X, Y, Z
+            case GLFW_KEY_4:
+                app->rotationModel += vec3(-1.0f, 0.0f, 0.0f);
+                break;
+            case GLFW_KEY_5:
+                app->rotationModel += vec3(0.0f, -1.0f, 0.0f);
+                break;
+            case GLFW_KEY_6:
+                app->rotationModel += vec3(0.0f, 0.0f, -1.0f);
+                break;
             }
         }
     }
@@ -424,8 +448,8 @@ private:
             float deltaX = static_cast<float>(xpos - app->lastMouseX);
             float deltaY = static_cast<float>(ypos - app->lastMouseY);
 
-            app->xRotation += deltaY * -0.1f;
-            app->yRotation += deltaX * -0.1f;
+            app->rotationModel.x += deltaY * -0.1f;
+            app->rotationModel.y += deltaX * -0.1f;
 
             app->lastMouseX = xpos;
             app->lastMouseY = ypos;
