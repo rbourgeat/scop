@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/17 11:19:27 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 06:57:24 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <stdexcept>
 #include <algorithm>
 #include <vector>
@@ -27,6 +28,7 @@
 #include <chrono>
 #include <limits>
 #include <optional>
+#include <iomanip>
 #include <array>
 #include <set>
 
@@ -85,6 +87,7 @@ struct Vertex {
     vec3 pos;
     vec3 color;
     vec2 texCoord;
+    vec3 ambientColor;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -95,8 +98,8 @@ struct Vertex {
         return bindingDescription;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
-        std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+    static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions() {
+        std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -112,6 +115,11 @@ struct Vertex {
         attributeDescriptions[2].location = 2;
         attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
         attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
+        attributeDescriptions[3].binding = 0;
+        attributeDescriptions[3].location = 3;
+        attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[3].offset = offsetof(Vertex, ambientColor);
 
         return attributeDescriptions;
     }
@@ -330,6 +338,7 @@ private:
     ** File: Parsing.cpp                 **
     ** ================================= */
     void parseObjFile(const std::string& filename);
+    void parseMtlFile(const std::string& objFilePath, const std::string& mtlFilename);
     static std::vector<char> readFile(const std::string& filename);
 
     static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

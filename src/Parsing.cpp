@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/17 11:20:36 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 07:01:00 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,17 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     std::vector<vec3> colors;
     std::vector<vec2> texCoords;
 
+    std::string mtlFilename;
+
     std::string line;
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string type;
         iss >> type;
 
-        if (type == "v") {
+        if (type == "mtllib") {
+            iss >> mtlFilename;
+        } else if (type == "v") {
             float x, y, z;
             iss >> x >> y >> z;
             positions.push_back(vec3(x, y, z));
@@ -45,7 +49,6 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             std::vector<int> vertexIndices;
             std::vector<int> texCoordIndices;
 
-            // Parse vertex and optional texture coordinate indices
             int vertexIndex;
             int texCoordIndex;
             while (iss >> vertexIndex) {
@@ -70,16 +73,6 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
                 if (!colors.empty()) {
                     vertex.color = colors[vertexIndices[j]];
-                // } else {
-                //     vertex.color = vec3(1.0f, 0.0f, 0.0f);
-                } else {
-                    if (j == 0) {
-                        vertex.color = vec3(1.0f, 0.0f, 0.0f);
-                    } else if (j == 1) {
-                        vertex.color = vec3(0.0f, 1.0f, 0.0f);
-                    } else {
-                        vertex.color = vec3(0.0f, 0.0f, 1.0f);  
-                    }
                 }
 
                 vertices.push_back(vertex);
@@ -88,34 +81,59 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         }
     }
 
+    if (!mtlFilename.empty()) {
+        parseMtlFile(filename, mtlFilename);
+    }
+    
     // Print vertices
-    std::cout << "Vertices:" << std::endl;
     for (const auto& vertex : vertices) {
-        std::cout << "Pos: (" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")";
-        std::cout << " TexCoord: (" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")";
-        std::cout << " Color: (" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")";
-        std::cout << std::endl;
+        std::cout << "Position    : " << "(" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")" << std::endl;
+        std::cout << "TexCoord    : " << "(" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")" << std::endl;
+        std::cout << "Color       : " << "(" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")" << std::endl;
+        std::cout << "AmbientColor: " << "(" << vertex.ambientColor.x << ", " << vertex.ambientColor.y << ", " << vertex.ambientColor.z << ")" << std::endl;
+        std::cout << "============" << std::endl;
     }
 
-    // Print indices
-    std::cout << "Indices:" << std::endl;
-    for (const auto& index : indices) {
-        std::cout << index << " ";
-    }
-    std::cout << std::endl;
-
-    // vertices = {
-    //     {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-    //     {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-    //     {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-    //     {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}
-    // };
-
-    // indices = {
-    //     0, 1, 2, 2, 3, 0
-    // };
+    // // Print indices
+    // std::cout << "Indices:" << std::endl;
+    // for (const auto& index : indices) {
+    //     std::cout << index << " ";
+    // }
+    // std::cout << std::endl;
 
     file.close();
+}
+
+void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& mtlFilename) {
+    std::filesystem::path objPath(objFilePath);
+    std::filesystem::path mtlPath = objPath.parent_path() / mtlFilename;
+
+    std::ifstream file(mtlPath);
+    if (!file.is_open()) {
+        std::cout << "Warning: MTL file not found: " << mtlPath << std::endl;
+    }
+
+    std::string line;
+    vec3 ambientColor;
+    vec3 diffuseColor;
+
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string type;
+        iss >> type;
+
+        if (type == "Ka") {
+            iss >> ambientColor.x >> ambientColor.y >> ambientColor.z;
+        } else if (type == "Kd") {
+            iss >> diffuseColor.x >> diffuseColor.y >> diffuseColor.z;
+        }
+        // TODO: add more material properties
+    }
+
+    for (auto& vertex : vertices) {
+        vertex.color = diffuseColor;
+        vertex.ambientColor = ambientColor;
+    }
 }
 
 std::vector<char> VulkanApp::readFile(const std::string& filename) {
