@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 10:08:26 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 11:27:47 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ private:
     GLFWwindow* window;
 
     Camera cameraView {
-        vec3(5.0f, 5.0f, 5.0f),
+        vec3(5.0f, 5.0f, 0.0f),
         vec3(0.0f, 0.0f, 0.0f),
         vec3(0.0f, 1.0f, 0.0f)
     };
@@ -354,6 +354,19 @@ private:
 
         if ((action == GLFW_PRESS || action == GLFW_REPEAT) && !(mods & GLFW_MOD_SHIFT)) {
             switch (key) {
+                // CameraView Center
+                case GLFW_KEY_UP:
+                    app->cameraView.center += vec3(0, 1, 0);
+                    break;
+                case GLFW_KEY_DOWN:
+                    app->cameraView.center += vec3(0, -1, 0);
+                    break;
+                case GLFW_KEY_LEFT:
+                    app->cameraView.center += vec3(0, 0, 1);
+                    break;
+                case GLFW_KEY_RIGHT:
+                    app->cameraView.center += vec3(0, 0, -1);
+                    break;
                 // Position X, Y, Z
                 case GLFW_KEY_1:
                     app->positionModel += vec3(1.0f, 0.0f, 0.0f);
@@ -382,19 +395,30 @@ private:
                 // RGB COLORS
                 case GLFW_KEY_R:
                     for (auto& vertex : app->vertices) {
-                        vertex.color = vec3(1.0, 0.4, 0.4);
+                        vertex.color = vec3(1, 0.3, 0.3);
                     }
                     app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_G:
                     for (auto& vertex : app->vertices) {
-                        vertex.color = vec3(0.4, 1.0, 0.4);
+                        vertex.color = vec3(0.3, 1, 0.3);
                     }
                     app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_B:
                     for (auto& vertex : app->vertices) {
-                        vertex.color = vec3(0.4, 0.4, 1.0);
+                        vertex.color = vec3(0.3, 0.3, 1);
+                    }
+                    app->updateVertexBuffer();
+                    break;
+                case GLFW_KEY_D:
+                    for (size_t i = 0; i < app->vertices.size(); ++i) {
+                        auto& vertex = app->vertices[i];
+                        if (i % 2 == 0) {
+                            vertex.color = vec3(0, 0, 0);
+                        } else {
+                            vertex.color = vec3(1, 1, 1);
+                        }
                     }
                     app->updateVertexBuffer();
                     break;
@@ -422,6 +446,8 @@ private:
                 break;
             case GLFW_KEY_6:
                 app->rotationModel += vec3(0.0f, 0.0f, -1.0f);
+                break;
+            default:
                 break;
             }
         }

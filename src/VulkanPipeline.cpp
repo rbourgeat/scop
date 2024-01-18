@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 10:08:43 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 11:26:42 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,12 +286,15 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
     ubo.view = viewMatrix;
 
-    mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
+    mat4 projMatrix = math::perspective(math::radians(70.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
 
-    std::cout << "rotationModel: (" << rotationModel.x << ", " << rotationModel.y << ", " << rotationModel.z << ")" << std::endl;
-    std::cout << "positionModel: (" << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << ")" << std::endl;
+    // std::cout << "rotationModel: (" << rotationModel.x << ", " << rotationModel.y << ", " << rotationModel.z << ")" << std::endl;
+    // std::cout << "positionModel: (" << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << ")" << std::endl;
+
+    std::cout << "cameraView.eye: (" << cameraView.eye.x << ", " << cameraView.eye.y << ", " << cameraView.eye.z << ")" << std::endl;
+    std::cout << "cameraView.center: (" << cameraView.center.x << ", " << cameraView.center.y << ", " << cameraView.center.z << ")" << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
