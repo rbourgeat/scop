@@ -2,7 +2,7 @@
 
 Basic 3D model viewer made with Vulkan, C++ and GLFW.
 
-![example](https://media.discordapp.net/attachments/1192056446389583874/1196157286629003264/Capture_decran_2024-01-14_a_19.21.15.png?ex=65b69b48&is=65a42648&hm=2644aa57d434f771fec8f64c117ebb027b8d09705667ed4eebd19a0bcd10cce8&=&format=webp&quality=lossless)
+![example](https://media.discordapp.net/attachments/859094290667143168/1197530824971669514/VirtualBox_ubuntu_18_01_2024_14_19_04.png?ex=65bb9a7d&is=65a9257d&hm=62842d5a7221fa80a88fde016bf39588d2557c06a2fdd7fa1336ee9acad8fcdc&=&format=webp)
 
 ## Pre-requisites
 
@@ -60,11 +60,18 @@ make debug
 
 - SPACE : reset rotation
 
+- 1 : color in red
+
+- 2 : color in green
+
+- 3 : color in blue
+
 ## Sources
 
 - https://vulkan-tutorial.com
 
 ## ToDo List to optimize
 
+- [ ] Add more material parameters
 - [ ] Add more smooth keyboard rotation
 - [ ] https://developer.nvidia.com/vulkan-memory-management

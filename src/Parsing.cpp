@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 07:31:31 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 08:10:56 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,11 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
     // Print vertices
     for (const auto& vertex : vertices) {
-        std::cout << "Position    : " << "(" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")" << std::endl;
-        std::cout << "TexCoord    : " << "(" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")" << std::endl;
-        std::cout << "Color       : " << "(" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")" << std::endl;
-        std::cout << "AmbientColor: " << "(" << vertex.ambientColor.x << ", " << vertex.ambientColor.y << ", " << vertex.ambientColor.z << ")" << std::endl;
+        std::cout << "Position      : " << "(" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")" << std::endl;
+        std::cout << "TexCoord      : " << "(" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")" << std::endl;
+        std::cout << "Color         : " << "(" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")" << std::endl;
+        std::cout << "AmbientColor  : " << "(" << vertex.ambientColor.x << ", " << vertex.ambientColor.y << ", " << vertex.ambientColor.z << ")" << std::endl;
+        std::cout << "DissolveFactor: " << vertex.dissolveFactor << std::endl;
         std::cout << "<==========>" << std::endl;
     }
 
@@ -119,6 +120,7 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
     vec3 ambientColor;
     vec3 diffuseColor;
     vec3 specularColor;
+    float dissolveFactor = 1.0f;
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
@@ -131,6 +133,8 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
             iss >> diffuseColor.x >> diffuseColor.y >> diffuseColor.z;
         } else if (type == "Ks") {
             iss >> specularColor.x >> specularColor.y >> specularColor.z;
+        } else if (type == "d") {
+            iss >> dissolveFactor;
         }
         // TODO: add more material properties
     }
@@ -139,6 +143,7 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
         vertex.color = diffuseColor;
         vertex.ambientColor = ambientColor;
         vertex.specularColor = specularColor;
+        vertex.dissolveFactor = dissolveFactor;
     }
 }
 
