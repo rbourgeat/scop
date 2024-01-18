@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 07:36:38 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/18 07:43:41 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,6 +314,7 @@ private:
     ** File: VulkanVertex.cpp            **
     ** ================================= */
     void createVertexBuffer();
+    void updateVertexBuffer();
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
     void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
     void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -381,22 +382,19 @@ private:
                     for (auto& vertex : app->vertices) {
                         vertex.color = vec3(1.0, 0.4, 0.4);
                     }
-                    app->cleanupVertexBuffer();
-                    app->createVertexBuffer();
+                    app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_2:
                     for (auto& vertex : app->vertices) {
                         vertex.color = vec3(0.4, 1.0, 0.4);
                     }
-                    app->cleanupVertexBuffer();
-                    app->createVertexBuffer();
+                    app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_3:
                     for (auto& vertex : app->vertices) {
                         vertex.color = vec3(0.4, 0.4, 1.0);
                     }
-                    app->cleanupVertexBuffer();
-                    app->createVertexBuffer();
+                    app->updateVertexBuffer();
                     break;
                 default:
                     break;
