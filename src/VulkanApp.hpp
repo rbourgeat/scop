@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/19 07:13:20 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/19 08:39:42 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ struct Vertex {
         return bindingDescription;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 5> getAttributeDescriptions() {
-        std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions{};
+    static std::array<VkVertexInputAttributeDescription, 6> getAttributeDescriptions() {
+        std::array<VkVertexInputAttributeDescription, 6> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -127,6 +127,11 @@ struct Vertex {
         attributeDescriptions[4].location = 4;
         attributeDescriptions[4].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[4].offset = offsetof(Vertex, specularColor);
+
+        attributeDescriptions[5].binding = 0;
+        attributeDescriptions[5].location = 5;
+        attributeDescriptions[5].format = VK_FORMAT_D32_SFLOAT;
+        attributeDescriptions[5].offset = offsetof(Vertex, dissolveFactor);
 
         return attributeDescriptions;
     }

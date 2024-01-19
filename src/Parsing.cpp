@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 08:10:56 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/19 08:48:54 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     std::vector<vec3> colors;
     std::vector<vec2> texCoords;
 
-    std::string mtlFilename;
+    std::string mtlFilename = "";
 
     std::string line;
     while (std::getline(file, line)) {
@@ -77,11 +77,16 @@ void VulkanApp::parseObjFile(const std::string& filename) {
                     vertex.color = vec3(0.4, 1.0, 0.4);
                 }
 
+                vertex.ambientColor = vec3(1, 1, 1);
+                vertex.dissolveFactor = 1;
+
                 vertices.push_back(vertex);
                 indices.push_back(static_cast<uint16_t>(vertices.size() - 1));
             }
         }
     }
+
+    std::cout << mtlFilename << std::endl;
 
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
@@ -98,11 +103,11 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     }
 
     // Print indices
-    // std::cout << "Indices:" << std::endl;
-    // for (const auto& index : indices) {
-    //     std::cout << index << " ";
-    // }
-    // std::cout << std::endl;
+    std::cout << "Indices:" << std::endl;
+    for (const auto& index : indices) {
+        std::cout << index << " ";
+    }
+    std::cout << std::endl;
 
     file.close();
 }

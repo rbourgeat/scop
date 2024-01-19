@@ -15,7 +15,7 @@ void main() {
     vec3 specularContrib = specularColor;
     vec3 textureColor = texture(texSampler, fragTexCoord).rgb;
     
-    float alpha = 1.0 - dissolveFactor;
+    float alpha = dissolveFactor;
 
     outColor = vec4((fragColor + ambientContrib + specularContrib) * textureColor, alpha);
 }

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/19 06:18:27 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/19 08:34:26 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,22 +120,6 @@ void VulkanApp::createGraphicsPipeline() {
     viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     viewportState.viewportCount = 1;
     viewportState.scissorCount = 1;
-
-    VkVertexInputAttributeDescription ambientColorAttributeDescription{};
-    ambientColorAttributeDescription.binding = 0;
-    ambientColorAttributeDescription.location = 3;
-    ambientColorAttributeDescription.format = VK_FORMAT_R32G32B32_SFLOAT;
-    ambientColorAttributeDescription.offset = offsetof(Vertex, ambientColor);
-
-    attributeDescriptions[2] = ambientColorAttributeDescription;
-
-    VkVertexInputAttributeDescription specularColorAttributeDescription{};
-    specularColorAttributeDescription.binding = 0;
-    specularColorAttributeDescription.location = 4;
-    specularColorAttributeDescription.format = VK_FORMAT_R32G32B32_SFLOAT;
-    specularColorAttributeDescription.offset = offsetof(Vertex, specularColor);
-
-    attributeDescriptions[3] = specularColorAttributeDescription;
 
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -293,8 +277,8 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     // std::cout << "rotationModel: (" << rotationModel.x << ", " << rotationModel.y << ", " << rotationModel.z << ")" << std::endl;
     // std::cout << "positionModel: (" << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << ")" << std::endl;
 
-    std::cout << "cameraView.eye: (" << cameraView.eye.x << ", " << cameraView.eye.y << ", " << cameraView.eye.z << ")" << std::endl;
-    std::cout << "cameraView.center: (" << cameraView.center.x << ", " << cameraView.center.y << ", " << cameraView.center.z << ")" << std::endl;
+    // std::cout << "cameraView.eye: (" << cameraView.eye.x << ", " << cameraView.eye.y << ", " << cameraView.eye.z << ")" << std::endl;
+    // std::cout << "cameraView.center: (" << cameraView.center.x << ", " << cameraView.center.y << ", " << cameraView.center.z << ")" << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
