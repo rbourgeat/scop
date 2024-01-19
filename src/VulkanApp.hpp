@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 11:27:47 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/19 07:13:20 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ private:
     GLFWwindow* window;
 
     Camera cameraView {
-        vec3(5.0f, 5.0f, 0.0f),
+        vec3(5.0f, 0.0f, 5.0f),
         vec3(0.0f, 0.0f, 0.0f),
         vec3(0.0f, 1.0f, 0.0f)
     };
@@ -241,6 +241,8 @@ private:
     size_t currentFrame = 0;
 
     bool framebufferResized = false;
+
+    VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 
     /* ================================= **
     ** Vulkan initialization             **
@@ -414,13 +416,33 @@ private:
                 case GLFW_KEY_D:
                     for (size_t i = 0; i < app->vertices.size(); ++i) {
                         auto& vertex = app->vertices[i];
-                        if (i % 2 == 0) {
-                            vertex.color = vec3(0, 0, 0);
+
+                        size_t triangleIndex = i / 3;
+
+                        if (triangleIndex % 6 < 2) {
+                            vertex.color = vec3(0.0f, 0.0f, 0.0f);
+                        } else if (triangleIndex % 6 == 2) {
+                            vertex.color = vec3(0.1f, 0.1f, 0.1f);
+                        } else if (triangleIndex % 6 == 3) {
+                            vertex.color = vec3(0.3f, 0.3f, 0.3f);
+                        } else if (triangleIndex % 6 == 4) {
+                            vertex.color = vec3(0.5f, 0.5f, 0.5f);
                         } else {
-                            vertex.color = vec3(1, 1, 1);
+                            vertex.color = vec3(0.7f, 0.7f, 0.7f);
                         }
                     }
                     app->updateVertexBuffer();
+                    break;
+                case GLFW_KEY_T:
+                    if (app->topology == VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST) {
+                        app->topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+                    } else if (app->topology == VK_PRIMITIVE_TOPOLOGY_POINT_LIST) {
+                        app->topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+                    } else {
+                        app->topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+                    }
+                    vkDestroyPipeline(app->device, app->graphicsPipeline, nullptr);
+                    app->createGraphicsPipeline();
                     break;
                 default:
                     break;

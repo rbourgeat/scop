@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/18 10:49:23 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/19 06:37:43 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,10 @@ public:
     vec3 operator/(float scalar) const {
         float invScalar = 1.0f / scalar;
         return vec3(x * invScalar, y * invScalar, z * invScalar);
+    }
+
+    friend vec3 operator*(float scalar, const vec3& v) {
+        return vec3(v.x * scalar, v.y * scalar, v.z * scalar);
     }
 
     // Compound addition operator
@@ -265,6 +269,10 @@ public:
     }
 
     static float lerp(float a, float b, float t) {
+        return a + t * (b - a);
+    }
+
+    static vec3 lerp(const vec3& a, const vec3& b, float t) {
         return a + t * (b - a);
     }
 

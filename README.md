@@ -56,7 +56,9 @@ make debug
 
 - `SPACE` : reset position + rotation
 
-- `R, G, B` : color in red, green or blue
+- `R, G, B, D` : color in red, green, blue or dark (like the subject)
+
+- `T` : change topology
 
 - `1, 2, 3` : increase X, Y, Z model position
 
