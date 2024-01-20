@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 19:54:29 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/17 05:52:13 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/20 11:24:32 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 
 void VulkanApp::createTextureImage() {
     int texWidth, texHeight, texChannels;
+#ifdef __APPLE__
+    std::vector<unsigned char> pixels = Image::loadImage("../textures/stone.bmp", texWidth, texHeight, texChannels);
+#elif
     std::vector<unsigned char> pixels = Image::loadImage("textures/stone.bmp", texWidth, texHeight, texChannels);
+#endif
     VkDeviceSize imageSize = texWidth * texHeight * 4;
 
     if (pixels.empty()) {

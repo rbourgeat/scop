@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/19 08:48:54 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/20 11:19:56 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,22 +92,22 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         parseMtlFile(filename, mtlFilename);
     }
 
-    // Print vertices
-    for (const auto& vertex : vertices) {
-        std::cout << "Position      : " << "(" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")" << std::endl;
-        std::cout << "TexCoord      : " << "(" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")" << std::endl;
-        std::cout << "Color         : " << "(" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")" << std::endl;
-        std::cout << "AmbientColor  : " << "(" << vertex.ambientColor.x << ", " << vertex.ambientColor.y << ", " << vertex.ambientColor.z << ")" << std::endl;
-        std::cout << "DissolveFactor: " << vertex.dissolveFactor << std::endl;
-        std::cout << "<==========>" << std::endl;
-    }
+    // // Print vertices
+    // for (const auto& vertex : vertices) {
+    //     std::cout << "Position      : " << "(" << vertex.pos.x << ", " << vertex.pos.y << ", " << vertex.pos.z << ")" << std::endl;
+    //     std::cout << "TexCoord      : " << "(" << vertex.texCoord.x << ", " << vertex.texCoord.y << ")" << std::endl;
+    //     std::cout << "Color         : " << "(" << vertex.color.x << ", " << vertex.color.y << ", " << vertex.color.z << ")" << std::endl;
+    //     std::cout << "AmbientColor  : " << "(" << vertex.ambientColor.x << ", " << vertex.ambientColor.y << ", " << vertex.ambientColor.z << ")" << std::endl;
+    //     std::cout << "DissolveFactor: " << vertex.dissolveFactor << std::endl;
+    //     std::cout << "<==========>" << std::endl;
+    // }
 
-    // Print indices
-    std::cout << "Indices:" << std::endl;
-    for (const auto& index : indices) {
-        std::cout << index << " ";
-    }
-    std::cout << std::endl;
+    // // Print indices
+    // std::cout << "Indices:" << std::endl;
+    // for (const auto& index : indices) {
+    //     std::cout << index << " ";
+    // }
+    // std::cout << std::endl;
 
     file.close();
 }
@@ -156,7 +156,8 @@ std::vector<char> VulkanApp::readFile(const std::string& filename) {
     std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file !");
+        std::cerr << "Error opening file: " << filename << std::endl;
+        std::exit(0);
     }
 
     size_t fileSize = (size_t) file.tellg();

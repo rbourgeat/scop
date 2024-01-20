@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/19 08:34:26 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/20 11:21:40 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,13 @@ VkShaderModule VulkanApp::createShaderModule(const std::vector<char>& code) {
 }
 
 void VulkanApp::createGraphicsPipeline() {
+#ifdef __APPLE__
+    auto vertShaderCode = readFile("../shaders/vert.spv");
+    auto fragShaderCode = readFile("../shaders/frag.spv");
+#elif
     auto vertShaderCode = readFile("shaders/vert.spv");
     auto fragShaderCode = readFile("shaders/frag.spv");
+#endif
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

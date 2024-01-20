@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 19:51:52 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/15 10:45:56 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/20 11:23:53 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,25 @@
 class Image {
 public:
     static std::vector<unsigned char> loadImage(const char* filename, int& width, int& height, int& channels) {
-        // Open the image file
         std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
         if (!file.is_open()) {
-            throw std::runtime_error("Failed to open image file !");
+            std::cerr << "Error opening file: " << filename << std::endl;
+            std::exit(0);
         }
 
-        // Read the file size
         size_t fileSize = static_cast<size_t>(file.tellg());
         file.seekg(0);
 
-        // Read the entire file into a buffer
         std::vector<unsigned char> buffer(fileSize);
         file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
 
-        // Check for BMP header (assuming BMP format)
         if (buffer.size() >= 54 && buffer[0] == 'B' && buffer[1] == 'M') {
-            // Extract width and height from BMP header
             width = *reinterpret_cast<int*>(&buffer[18]);
             height = *reinterpret_cast<int*>(&buffer[22]);
             channels = *reinterpret_cast<short*>(&buffer[28]);
 
             if (channels == 24 || channels == 32) {
-                // Handle 24-bit and 32-bit images
                 int bytesPerPixel = channels / 8;
                 int padding = (4 - (width * bytesPerPixel) % 4) % 4;
 

@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/19 08:39:42 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/01/20 11:22:21 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,20 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include <filesystem>
+#include <algorithm>
+#include <stdexcept>
+#include <optional>
 #include <iostream>
 #include <fstream>
-#include <filesystem>
-#include <stdexcept>
-#include <algorithm>
-#include <vector>
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
+#include <sstream>
+#include <iomanip>
+#include <vector>
 #include <chrono>
 #include <limits>
-#include <optional>
-#include <iomanip>
 #include <array>
 #include <set>
 
@@ -130,7 +131,7 @@ struct Vertex {
 
         attributeDescriptions[5].binding = 0;
         attributeDescriptions[5].location = 5;
-        attributeDescriptions[5].format = VK_FORMAT_D32_SFLOAT;
+        attributeDescriptions[5].format = VK_FORMAT_R32G32B32_SFLOAT;
         attributeDescriptions[5].offset = offsetof(Vertex, dissolveFactor);
 
         return attributeDescriptions;
