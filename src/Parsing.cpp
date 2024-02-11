@@ -63,25 +63,29 @@ void VulkanApp::parseObjFile(const std::string& filename) {
                 }
             }
 
-            for (int j = 0; j < 3; ++j) {
-                Vertex vertex;
-                vertex.pos = positions[vertexIndices[j]];
+            for (size_t j = 0; j < vertexIndices.size() - 2; ++j) {
+                std::vector<int> triangleIndices = {0, static_cast<int>(j + 1), static_cast<int>(j + 2)};
 
-                if (!texCoords.empty()) {
-                    vertex.texCoord = texCoords[texCoordIndices[j]];
+                for (int index : triangleIndices) {
+                    Vertex vertex;
+                    vertex.pos = positions[vertexIndices[index]];
+
+                    if (!texCoords.empty()) {
+                        vertex.texCoord = texCoords[texCoordIndices[index]];
+                    }
+
+                    if (!colors.empty()) {
+                        vertex.color = colors[vertexIndices[index]];
+                    } else {
+                        vertex.color = vec3(0.4, 1.0, 0.4);
+                    }
+
+                    vertex.ambientColor = vec3(1, 1, 1);
+                    vertex.dissolveFactor = 1;
+
+                    vertices.push_back(vertex);
+                    indices.push_back(static_cast<uint16_t>(vertices.size() - 1));
                 }
-
-                if (!colors.empty()) {
-                    vertex.color = colors[vertexIndices[j]];
-                } else {
-                    vertex.color = vec3(0.4, 1.0, 0.4);
-                }
-
-                vertex.ambientColor = vec3(1, 1, 1);
-                vertex.dissolveFactor = 1;
-
-                vertices.push_back(vertex);
-                indices.push_back(static_cast<uint16_t>(vertices.size() - 1));
             }
         }
     }
