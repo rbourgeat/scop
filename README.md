@@ -72,7 +72,14 @@ make debug
 
 - https://vulkan-tutorial.com
 
+## ToDo List
+
+- [ ] Fix flat object when rotate to 90
+
+- [ ] turning around its central axis (careful, not around one of its corners)
+
 ## ToDo List to optimize
 
 - [ ] Add more material parameters
+
 - [ ] https://developer.nvidia.com/vulkan-memory-management

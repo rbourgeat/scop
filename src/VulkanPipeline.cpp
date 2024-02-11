@@ -275,7 +275,7 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
     ubo.view = viewMatrix;
 
-    mat4 projMatrix = math::perspective(math::radians(70.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
+    mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
 

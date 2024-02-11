@@ -49,17 +49,18 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             std::vector<int> vertexIndices;
             std::vector<int> texCoordIndices;
 
-            int vertexIndex;
-            int texCoordIndex;
-            while (iss >> vertexIndex) {
-                vertexIndex--;
-                vertexIndices.push_back(vertexIndex);
-
-                if (texCoords.size() > 0) {
-                    iss.ignore(); // Ignore the '/'
-                    iss >> texCoordIndex;
-                    texCoordIndex--;
-                    texCoordIndices.push_back(texCoordIndex);
+            std::string vertexData;
+            while (iss >> vertexData) {
+                std::istringstream vertexDataStream(vertexData);
+                std::string index;
+                int i = 0;
+                while (std::getline(vertexDataStream, index, '/')) {
+                    if (i == 0) {
+                        vertexIndices.push_back(std::stoi(index) - 1);
+                    } else if (i == 1 && !index.empty()) {
+                        texCoordIndices.push_back(std::stoi(index) - 1);
+                    }
+                    i++;
                 }
             }
 
@@ -89,8 +90,6 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             }
         }
     }
-
-    std::cout << mtlFilename << std::endl;
 
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
