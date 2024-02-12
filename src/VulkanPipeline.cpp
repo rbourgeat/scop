@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 06:36:54 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 07:49:13 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,6 +271,7 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     quat totalRotationQuat = math::angleAxis(math::radians(rotationAngle), rotationAxis);
 
     mat4 modelMatrix = math::toMat4(totalRotationQuat);
+    modelMatrix = math::translate(modelMatrix, positionModel);
     ubo.model = modelMatrix;
 
     mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);

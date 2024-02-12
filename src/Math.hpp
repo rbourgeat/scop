@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 06:33:04 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 07:44:01 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,13 @@ public:
         for (int i = 0; i < 4; ++i)
             for (int j = 0; j < 4; ++j)
                 elements[i][j] = (i == j) ? 1.0f : 0.0f;
+    }
+
+    // Constructor that initializes all elements to a single float value
+    mat4(float value) {
+        for (int i = 0; i < 4; ++i)
+            for (int j = 0; j < 4; ++j)
+                elements[i][j] = value;
     }
 
     // Copy constructor

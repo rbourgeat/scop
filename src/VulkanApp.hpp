@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 05:56:20 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 07:48:08 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -364,20 +364,16 @@ private:
             switch (key) {
                 // CameraView Center
                 case GLFW_KEY_UP:
-                    app->positionModel += vec3(0, 1, 0);
-                    std::cout << "positionModel:" << app->positionModel.x << ", " << app->positionModel.y << ", " << app->positionModel.z << std::endl;
+                    app->cameraView.center += vec3(0, 1, 0);
                     break;
                 case GLFW_KEY_DOWN:
-                    app->positionModel += vec3(0, -1, 0);
-                    std::cout << "positionModel:" << app->positionModel.x << ", " << app->positionModel.y << ", " << app->positionModel.z << std::endl;
+                    app->cameraView.center += vec3(0, -1, 0);
                     break;
                 case GLFW_KEY_LEFT:
-                    app->positionModel += vec3(0, 0, 1);
-                    std::cout << "positionModel:" << app->positionModel.x << ", " << app->positionModel.y << ", " << app->positionModel.z << std::endl;
+                    app->cameraView.center += vec3(0, 0, 1);
                     break;
                 case GLFW_KEY_RIGHT:
-                    app->positionModel += vec3(0, 0, -1);
-                    std::cout << "positionModel:" << app->positionModel.x << ", " << app->positionModel.y << ", " << app->positionModel.z << std::endl;
+                    app->cameraView.center += vec3(0, 0, -1);
                     break;
                 // Position X, Y, Z
                 case GLFW_KEY_1:
