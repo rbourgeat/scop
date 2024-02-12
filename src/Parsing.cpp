@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 06:08:25 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 11:05:27 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         std::exit(0);
     }
 
-    std::vector<vec3> positions;
-    std::vector<vec3> colors;
-    std::vector<vec2> texCoords;
-
     std::string mtlFilename = "";
-
+    std::vector<vec3> positions;
+    std::vector<vec2> texCoords;
+    std::vector<vec3> colors;
     std::string line;
+    vec3 minPos(std::numeric_limits<float>::max());
+    vec3 maxPos(std::numeric_limits<float>::lowest());
+
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string type;
@@ -36,7 +37,10 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         } else if (type == "v") {
             float x, y, z;
             iss >> x >> y >> z;
-            positions.push_back(vec3(x, y, z));
+            vec3 pos(x, y, z);
+            positions.push_back(pos);
+            minPos = math::min(minPos, pos);
+            maxPos = math::max(maxPos, pos);
         } else if (type == "vt") {
             float u, v;
             iss >> u >> v;
@@ -55,7 +59,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
                 std::string index;
                 int i = 0;
                 while (std::getline(vertexDataStream, index, '/')) {
-                    if (i == 0) {
+                    if (i == 0 && !index.empty()) {
                         vertexIndices.push_back(std::stoi(index) - 1);
                     } else if (i == 1 && !index.empty()) {
                         texCoordIndices.push_back(std::stoi(index) - 1);
@@ -69,6 +73,10 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
                 for (int index : triangleIndices) {
                     Vertex vertex;
+
+                    if (positions.empty())
+                        continue;
+
                     vertex.pos = positions[vertexIndices[index]];
 
                     if (!texCoords.empty()) {
@@ -90,6 +98,9 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             }
         }
     }
+
+    maxBounds = maxPos;
+    minBounds = minPos;
 
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
@@ -114,19 +125,15 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
     file.close();
 
-    vec3 minPos = positions[0];
-    vec3 maxPos = positions[0];
-
-    // Find min and max positions
-    for (const auto& pos : positions) {
-        minPos = math::min(minPos, pos);
-        maxPos = math::max(maxPos, pos);
+    if (positions.empty()) {
+        std::cerr << "Error: The OBJ file does not contain vertex." << std::endl;
+        std::exit(EXIT_FAILURE);
     }
 
-    // Calculate center point
-    vec3 positionModel = (minPos + maxPos) / 2.0f;
-
-    std::cout << "Center point of the object: " << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << std::endl;
+    if (indices.empty()) {
+        std::cerr << "Error: The OBJ file does not contain face." << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& mtlFilename) {

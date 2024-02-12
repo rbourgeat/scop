@@ -2,7 +2,7 @@
 
 Basic 3D model viewer made with Vulkan, C++ and GLFW.
 
-![example](https://media.discordapp.net/attachments/859094290667143168/1197530824971669514/VirtualBox_ubuntu_18_01_2024_14_19_04.png?ex=65bb9a7d&is=65a9257d&hm=62842d5a7221fa80a88fde016bf39588d2557c06a2fdd7fa1336ee9acad8fcdc&=&format=webp)
+![42](https://i.ibb.co/ZcKRgJX/Virtual-Box-ubuntu-12-02-2024-15-19-50.png)
 
 ## Pre-requisites
 
@@ -54,7 +54,7 @@ make debug
 
 - `MOUSE` : rotate 3D object
 
-- `SPACE` : reset position + rotation
+- `SPACE` : reset object position/rotation + camera
 
 - `R, G, B, D` : color in red, green, blue or dark (like the subject)
 

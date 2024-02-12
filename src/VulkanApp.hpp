@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 07:48:08 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 10:43:30 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,10 @@ private:
 
     vec3 positionModel;
     vec3 rotationModel;
+
+    // Bounding Box
+    vec3 minBounds;
+    vec3 maxBounds;
 
     double lastMouseX = 0.0;
     double lastMouseY = 0.0;
@@ -399,6 +403,7 @@ private:
                 case GLFW_KEY_SPACE:
                     app->positionModel = vec3(0.0f, 0.0f, 0.0f);
                     app->rotationModel = vec3(0.0f, 0.0f, 0.0f);
+                    app->cameraView.center = vec3(0.0f, 0.0f, 0.0f);
                     break;
                 // RGB COLORS
                 case GLFW_KEY_R:

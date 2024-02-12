@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 07:44:01 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 11:19:31 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ public:
     // Constructors
     vec3() : x(0.0f), y(0.0f), z(0.0f) {}
     vec3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+    vec3(float value) : x(value), y(value), z(value) {}
 
     // Unary minus operator
     vec3 operator-() const {
@@ -106,12 +107,41 @@ public:
         return vec3(v.x * scalar, v.y * scalar, v.z * scalar);
     }
 
-    // Compound addition operator
     vec3& operator+=(const vec3& other) {
         x += other.x;
         y += other.y;
         z += other.z;
         return *this;
+    }
+
+    vec3& operator-=(const vec3& other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
+
+    // Subscript operator
+    float& operator[](int index) {
+        if (index == 0)
+            return x;
+        else if (index == 1)
+            return y;
+        else if (index == 2)
+            return z;
+        else
+            throw std::out_of_range("Index out of range in vec3 subscript operator");
+    }
+
+    const float& operator[](int index) const {
+        if (index == 0)
+            return x;
+        else if (index == 1)
+            return y;
+        else if (index == 2)
+            return z;
+        else
+            throw std::out_of_range("Index out of range in vec3 subscript operator");
     }
 
     // Dot product
@@ -315,9 +345,9 @@ public:
     static mat4 translate(const mat4& matrix, const vec3& translation) {
         mat4 result = matrix;
 
-        result(3, 0) += translation.x;
-        result(3, 1) += translation.y;
-        result(3, 2) += translation.z;
+        for (int i = 0; i < 3; ++i) {
+            result(3, i) += translation[i];
+        }
 
         return result;
     }
