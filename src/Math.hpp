@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/19 06:37:43 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 06:33:04 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,15 @@ public:
     vec3 operator/(float scalar) const {
         float invScalar = 1.0f / scalar;
         return vec3(x * invScalar, y * invScalar, z * invScalar);
+    }
+
+    vec3& operator/=(float scalar) {
+        if (scalar != 0.0f) {
+            x /= scalar;
+            y /= scalar;
+            z /= scalar;
+        }
+        return *this;
     }
 
     friend vec3 operator*(float scalar, const vec3& v) {
@@ -262,6 +271,18 @@ public:
 
 class math {
 public:
+    static vec3 min(const vec3& a, const vec3& b) {
+        return vec3(std::min(a.x, b.x), std::min(a.y, b.y), std::min(a.z, b.z));
+    }
+
+    static vec3 max(const vec3& a, const vec3& b) {
+        return vec3(std::max(a.x, b.x), std::max(a.y, b.y), std::max(a.z, b.z));
+    }
+
+    static float length(vec3 v) {
+        return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    }
+
     static vec3 normalize(const vec3& v) {
         vec3 result = v;
         result.normalize();

@@ -74,8 +74,6 @@ make debug
 
 ## ToDo List
 
-- [ ] Fix flat object when rotate to 90
-
 - [ ] turning around its central axis (careful, not around one of its corners)
 
 ## ToDo List to optimize

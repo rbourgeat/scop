@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/20 11:21:40 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 06:36:54 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void VulkanApp::createGraphicsPipeline() {
 #ifdef __APPLE__
     auto vertShaderCode = readFile("../shaders/vert.spv");
     auto fragShaderCode = readFile("../shaders/frag.spv");
-#elif
+#else
     auto vertShaderCode = readFile("shaders/vert.spv");
     auto fragShaderCode = readFile("shaders/frag.spv");
 #endif
@@ -261,15 +261,16 @@ void VulkanApp::createUniformBuffers() {
 void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     UniformBufferObject ubo{};
 
-    quat xRotationQuat = math::angleAxis(math::radians(rotationModel.x), vec3(1.0f, 0.0f, 0.0f));
-    quat yRotationQuat = math::angleAxis(math::radians(rotationModel.y), vec3(0.0f, 1.0f, 0.0f));
-    quat zRotationQuat = math::angleAxis(math::radians(rotationModel.z), vec3(0.0f, 0.0f, 1.0f));
+    vec3 rotationAxis = vec3(rotationModel.x, rotationModel.y, rotationModel.z);
+    float rotationAngle = math::length(rotationAxis);
+    // Normalize
+    if (rotationAngle > 0.0f) {
+        rotationAxis /= rotationAngle;
+    }
 
-    quat totalRotationQuat = xRotationQuat * yRotationQuat * zRotationQuat;
+    quat totalRotationQuat = math::angleAxis(math::radians(rotationAngle), rotationAxis);
 
-    mat4 translationMatrix = math::translate(mat4(), positionModel);
-
-    mat4 modelMatrix = translationMatrix * math::toMat4(totalRotationQuat);
+    mat4 modelMatrix = math::toMat4(totalRotationQuat);
     ubo.model = modelMatrix;
 
     mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
@@ -278,12 +279,6 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
     projMatrix(1, 1) *= -1;
     ubo.proj = projMatrix;
-
-    // std::cout << "rotationModel: (" << rotationModel.x << ", " << rotationModel.y << ", " << rotationModel.z << ")" << std::endl;
-    // std::cout << "positionModel: (" << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << ")" << std::endl;
-
-    // std::cout << "cameraView.eye: (" << cameraView.eye.x << ", " << cameraView.eye.y << ", " << cameraView.eye.z << ")" << std::endl;
-    // std::cout << "cameraView.center: (" << cameraView.center.x << ", " << cameraView.center.y << ", " << cameraView.center.z << ")" << std::endl;
 
     memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }

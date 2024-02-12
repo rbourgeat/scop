@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/01/20 11:19:56 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/02/12 06:08:25 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,20 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     // std::cout << std::endl;
 
     file.close();
+
+    vec3 minPos = positions[0];
+    vec3 maxPos = positions[0];
+
+    // Find min and max positions
+    for (const auto& pos : positions) {
+        minPos = math::min(minPos, pos);
+        maxPos = math::max(maxPos, pos);
+    }
+
+    // Calculate center point
+    vec3 positionModel = (minPos + maxPos) / 2.0f;
+
+    std::cout << "Center point of the object: " << positionModel.x << ", " << positionModel.y << ", " << positionModel.z << std::endl;
 }
 
 void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& mtlFilename) {
