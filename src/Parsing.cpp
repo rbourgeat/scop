@@ -107,18 +107,6 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         }
     }
 
-    // xBoundaries = {minX, maxX};
-    // yBoundaries = {minY, maxY};
-    // zBoundaries = {minZ, maxZ};
-    // modelCentroid = vec3(
-    //     (xBoundaries.first + xBoundaries.second) / 2.f,
-    //     (yBoundaries.first + yBoundaries.second) / 2.f,
-    //     (zBoundaries.first + zBoundaries.second) / 2.f
-    // );
-    //
-    // std::cout << "xBoundaries: (" << xBoundaries.first << ", " << xBoundaries.second << ")\n";
-    // std::cout << "yBoundaries: (" << yBoundaries.first << ", " << yBoundaries.second << ")\n";
-    // std::cout << "zBoundaries: (" << zBoundaries.first << ", " << zBoundaries.second << ")\n";
     modelCentroid = vec3((minX + maxX) / 2.f, (minY + maxY) / 2.f, (minZ + maxZ) / 2.f);
     std::cout << "center: (" << modelCentroid.x << ", " << modelCentroid.y << ", " << modelCentroid.z << ")\n";
 

@@ -275,11 +275,10 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
     quat totalRotationQuat = math::angleAxis(math::radians(rotationAngle), rotationAxis);
 
     mat4 modelMatrix = math::translate(mat4(), positionModel - modelCentroid);
-    modelMatrix =  math::rotate(math::radians(rotationAngle), rotationAxis) * modelMatrix;
-    modelMatrix = math::translate(mat4(), -modelCentroid) * modelMatrix;
+    modelMatrix = math::translate(mat4(), -modelCentroid) * totalRotationQuat.toMat4() * modelMatrix;
     ubo.model = modelMatrix;
 
-    mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
+    mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center - modelCentroid, cameraView.up);
     ubo.view = viewMatrix;
 
     mat4 projMatrix = math::perspective(math::radians(45.0f), swapChainExtent.width / static_cast<float>(swapChainExtent.height), 0.1f, 10.0f);
