@@ -220,7 +220,7 @@ public:
 
     // Matrix multiplication
     mat4 operator*(const mat4& other) const {
-        mat4 result;
+        mat4 result(0);
         for (int i = 0; i < 4; ++i)
             for (int j = 0; j < 4; ++j)
                 for (int k = 0; k < 4; ++k)
@@ -278,29 +278,33 @@ public:
 
     // Convert quaternion to a 4x4 matrix (rotation matrix)
     mat4 toMat4() const {
-        float xx = x * x;
-        float xy = x * y;
-        float xz = x * z;
-        float xw = x * w;
-        float yy = y * y;
-        float yz = y * z;
-        float yw = y * w;
-        float zz = z * z;
-        float zw = z * w;
+        const float xx = x * x;
+        const float xy = x * y;
+        const float xz = x * z;
+        const float xw = x * w;
+
+        const float yy = y * y;
+        const float yz = y * z;
+        const float yw = y * w;
+
+        const float zz = z * z;
+        const float zw = z * w;
+
+        const float ww = w * w;
 
         mat4 result;
 
-        result[0][0] = 1.0f - 2.0f * (yy + zz);
-        result[0][1] = 2.0f * (xy - zw);
-        result[0][2] = 2.0f * (xz + yw);
+        result[0][0] = 1 - 2 * (zz + ww);
+        result[0][1] = 2 * (yz - xw);
+        result[0][2] = 2 * (yw + xz);
 
-        result[1][0] = 2.0f * (xy + zw);
-        result[1][1] = 1.0f - 2.0f * (xx + zz);
-        result[1][2] = 2.0f * (yz - xw);
+        result[1][0] = 2 * (yz + xw);
+        result[1][1] = 1 - 2 * (yy + ww);
+        result[1][2] = 2 * (zw - xy);
 
-        result[2][0] = 2.0f * (xz - yw);
-        result[2][1] = 2.0f * (yz + xw);
-        result[2][2] = 1.0f - 2.0f * (xx + yy);
+        result[2][0] = 2 * (yw - xz);
+        result[2][1] = 2 * (zw + xy);
+        result[2][2] = 1 - 2 * (yy + zz);
 
         return result;
     }
@@ -430,7 +434,7 @@ public:
     static quat angleAxis(float angle, const vec3& axis) {
         float halfAngle = angle * 0.5f;
         float sinHalf = std::sin(halfAngle);
-        return quat(axis.x * sinHalf, axis.y * sinHalf, axis.z * sinHalf, std::cos(halfAngle)).normalize();
+        return quat(std::cos(halfAngle), axis.x * sinHalf, axis.y * sinHalf, axis.z * sinHalf).normalize();
     }
 
     static mat4 toMat4(const quat& q) {

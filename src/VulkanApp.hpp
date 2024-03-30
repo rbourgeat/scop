@@ -186,11 +186,10 @@ private:
     };
 
     vec3 positionModel;
-    vec3 rotationModel;
+    vec3 rotationModel{0, 0, 1};
 
     // Bounding Box
-    vec3 minBounds;
-    vec3 maxBounds;
+    vec3 modelCentroid;
 
     double lastMouseX = 0.0;
     double lastMouseY = 0.0;

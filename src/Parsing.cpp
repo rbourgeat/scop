@@ -24,8 +24,10 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     std::vector<vec2> texCoords;
     std::vector<vec3> colors;
     std::string line;
-    vec3 minPos(std::numeric_limits<float>::max());
-    vec3 maxPos(std::numeric_limits<float>::lowest());
+
+    float minX = std::numeric_limits<float>::max(), maxX = std::numeric_limits<float>::lowest();
+    float minY = std::numeric_limits<float>::max(), maxY = std::numeric_limits<float>::lowest();
+    float minZ = std::numeric_limits<float>::max(), maxZ = std::numeric_limits<float>::lowest();
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
@@ -39,8 +41,14 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             iss >> x >> y >> z;
             vec3 pos(x, y, z);
             positions.push_back(pos);
-            minPos = math::min(minPos, pos);
-            maxPos = math::max(maxPos, pos);
+
+            minX = std::min(x, minX);
+            minY = std::min(y, minY);
+            minZ = std::min(z, minZ);
+
+            maxX = std::max(x, maxX);
+            maxY = std::max(y, maxY);
+            maxZ = std::max(z, maxZ);
         } else if (type == "vt") {
             float u, v;
             iss >> u >> v;
@@ -99,8 +107,8 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         }
     }
 
-    maxBounds = maxPos;
-    minBounds = minPos;
+    modelCentroid = vec3((minX + maxX) / 2.f, (minY + maxY) / 2.f, (minZ + maxZ) / 2.f);
+    std::cout << "center: (" << modelCentroid.x << ", " << modelCentroid.y << ", " << modelCentroid.z << ")\n";
 
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
