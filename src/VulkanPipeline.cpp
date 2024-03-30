@@ -12,6 +12,10 @@
 
 #include "VulkanApp.hpp"
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 void VulkanApp::createRenderPass() {
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChainImageFormat;
@@ -270,8 +274,9 @@ void VulkanApp::updateUniformBuffer(uint32_t currentImage) {
 
     quat totalRotationQuat = math::angleAxis(math::radians(rotationAngle), rotationAxis);
 
-    mat4 modelMatrix = math::toMat4(totalRotationQuat);
-    modelMatrix = math::translate(modelMatrix, positionModel);
+    mat4 modelMatrix = math::translate(mat4(), positionModel - modelCentroid);
+    modelMatrix =  math::rotate(math::radians(rotationAngle), rotationAxis) * modelMatrix;
+    modelMatrix = math::translate(mat4(), -modelCentroid) * modelMatrix;
     ubo.model = modelMatrix;
 
     mat4 viewMatrix = math::lookAt(cameraView.eye, cameraView.center, cameraView.up);
