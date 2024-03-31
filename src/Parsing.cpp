@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 11:05:27 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/03/31 13:38:48 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     }
 
     modelCentroid = vec3((minX + maxX) / 2.f, (minY + maxY) / 2.f, (minZ + maxZ) / 2.f);
-    std::cout << "center: (" << modelCentroid.x << ", " << modelCentroid.y << ", " << modelCentroid.z << ")\n";
+    // std::cout << "center: (" << modelCentroid.x << ", " << modelCentroid.y << ", " << modelCentroid.z << ")\n";
 
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
