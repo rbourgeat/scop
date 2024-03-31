@@ -6,15 +6,11 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:14:04 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 11:19:11 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/03/31 13:21:17 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "VulkanApp.hpp"
-
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 void VulkanApp::createRenderPass() {
     VkAttachmentDescription colorAttachment{};
