@@ -92,8 +92,8 @@ make debug
 
 - [ ] Add more material parameters
 
-- [ ] Mipmaps
-
 - [ ] Multisampling
+
+- [ ] Refacto `VulkanApp.hpp`
 
 - [ ] https://developer.nvidia.com/vulkan-memory-management
