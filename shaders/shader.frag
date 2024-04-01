@@ -12,11 +12,12 @@ layout(location = 5) in float dissolveTextureFactor;
 layout(location = 0) out vec4 outColor;
 
 void main() {
+    vec3 textureColor = texture(texSampler, fragTexCoord).rgb * dissolveTextureFactor;
+    vec3 diffuseContrib = (fragColor + textureColor) / 2;
     vec3 ambientContrib = ambientColor;
     vec3 specularContrib = specularColor;
-    vec3 textureColor = texture(texSampler, fragTexCoord).rgb * dissolveTextureFactor;
 
     float alpha = dissolveFactor;
 
-    outColor = vec4(((fragColor + textureColor) / 2) * ambientContrib * specularContrib, alpha);
+    outColor = vec4(diffuseContrib * ambientContrib * specularContrib, alpha);
 }
