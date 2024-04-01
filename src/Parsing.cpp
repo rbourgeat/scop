@@ -19,11 +19,12 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         std::exit(0);
     }
 
-    std::string mtlFilename = "";
+    std::string mtlFilename;
     std::vector<vec3> positions;
     std::vector<vec2> texCoords;
     std::vector<vec3> colors;
     std::string line;
+    std::string currentMaterial;
 
     float minX = std::numeric_limits<float>::max(), maxX = std::numeric_limits<float>::lowest();
     float minY = std::numeric_limits<float>::max(), maxY = std::numeric_limits<float>::lowest();
@@ -36,6 +37,8 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
         if (type == "mtllib") {
             iss >> mtlFilename;
+        } else if (type == "usemtl") {
+            iss >> currentMaterial;
         } else if (type == "v") {
             float x, y, z;
             iss >> x >> y >> z;
@@ -99,6 +102,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
                     vertex.ambientColor = vec3(1, 1, 1);
                     vertex.dissolveFactor = 1;
+                    vertex.material_name = currentMaterial;
 
                     vertices.push_back(vertex);
                     indices.push_back(static_cast<uint16_t>(vertices.size() - 1));
@@ -108,7 +112,6 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     }
 
     modelCentroid = vec3((minX + maxX) / 2.f, (minY + maxY) / 2.f, (minZ + maxZ) / 2.f);
-    // std::cout << "center: (" << modelCentroid.x << ", " << modelCentroid.y << ", " << modelCentroid.z << ")\n";
 
     if (!mtlFilename.empty()) {
         parseMtlFile(filename, mtlFilename);
@@ -154,33 +157,50 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
     }
 
     std::string line;
-    vec3 ambientColor;
-    vec3 diffuseColor;
-    vec3 specularColor;
-    float dissolveFactor = 1.0f;
+
+    std::unordered_map<std::string, Material> materials;
+    auto mat = materials.end();
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string type;
         iss >> type;
 
-        if (type == "Ka") {
-            iss >> ambientColor.x >> ambientColor.y >> ambientColor.z;
+        if (type == "newmtl") {
+            std::string name;
+            iss >> name;
+
+            auto [it, mode] = materials.insert_or_assign(name, Material{});
+            mat = it;
+            if (!mode) {
+                std::clog << "Warning: replaced old material " << name << std::endl;
+            }
+        } else if (type == "Ka") {
+            iss >> mat->second.ambient.x >>  mat->second.ambient.y >>  mat->second.ambient.z;
         } else if (type == "Kd") {
-            iss >> diffuseColor.x >> diffuseColor.y >> diffuseColor.z;
+            iss >>  mat->second.diffuse.x >>  mat->second.diffuse.y >>  mat->second.diffuse.z;
         } else if (type == "Ks") {
-            iss >> specularColor.x >> specularColor.y >> specularColor.z;
+            iss >>  mat->second.specular.x >>  mat->second.specular.y >>  mat->second.specular.z;
         } else if (type == "d") {
-            iss >> dissolveFactor;
+            iss >>  mat->second.dissolve;
         }
         // TODO: add more material properties
     }
 
+    if (mat == materials.end()) {
+        return;
+    }
     for (auto& vertex : vertices) {
-        vertex.color = diffuseColor;
-        vertex.ambientColor = ambientColor;
-        vertex.specularColor = specularColor;
-        vertex.dissolveFactor = dissolveFactor;
+        if (!vertex.material_name.empty()) {
+            try {
+                const auto&[ambient, diffuse, specular, dissolve] = materials.at(vertex.material_name);
+
+                vertex.color = diffuse;
+                vertex.ambientColor = ambient;
+                vertex.specularColor = specular;
+                vertex.dissolveFactor = dissolve;
+            } catch (const std::out_of_range&) {}
+        }
     }
 }
 

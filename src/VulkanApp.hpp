@@ -84,6 +84,13 @@ struct Camera {
     vec3 up;
 };
 
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float dissolve;
+};
+
 struct Vertex {
     vec3 pos;
     vec3 color;
@@ -91,6 +98,9 @@ struct Vertex {
     vec3 ambientColor;
     vec3 specularColor;
     float dissolveFactor;
+    float dissolveTexture{1.0};
+
+    std::string material_name;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -101,8 +111,8 @@ struct Vertex {
         return bindingDescription;
     }
 
-    static std::array<VkVertexInputAttributeDescription, 6> getAttributeDescriptions() {
-        std::array<VkVertexInputAttributeDescription, 6> attributeDescriptions{};
+    static std::array<VkVertexInputAttributeDescription, 7> getAttributeDescriptions() {
+        std::array<VkVertexInputAttributeDescription, 7> attributeDescriptions{};
 
         attributeDescriptions[0].binding = 0;
         attributeDescriptions[0].location = 0;
@@ -131,8 +141,13 @@ struct Vertex {
 
         attributeDescriptions[5].binding = 0;
         attributeDescriptions[5].location = 5;
-        attributeDescriptions[5].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[5].format = VK_FORMAT_R32_SFLOAT;
         attributeDescriptions[5].offset = offsetof(Vertex, dissolveFactor);
+
+        attributeDescriptions[6].binding = 0;
+        attributeDescriptions[6].location = 6;
+        attributeDescriptions[6].format = VK_FORMAT_R32_SFLOAT;
+        attributeDescriptions[6].offset = offsetof(Vertex, dissolveTexture);
 
         return attributeDescriptions;
     }
@@ -194,6 +209,8 @@ private:
     double lastMouseX = 0.0;
     double lastMouseY = 0.0;
     bool mouseDrag = false;
+    bool disable_textures = false;
+    bool transition_over = true;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -443,6 +460,10 @@ private:
                     }
                     app->updateVertexBuffer();
                     break;
+                case GLFW_KEY_M:
+                    app->disable_textures = !app->disable_textures;
+                    app->transition_over = false;
+                    break;
                 case GLFW_KEY_T:
                     if (app->topology == VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST) {
                         app->topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
@@ -560,6 +581,8 @@ private:
         auto app = reinterpret_cast<VulkanApp*>(glfwGetWindowUserPointer(window));
         app->framebufferResized = true;
     }
+
+    void transition_textures();
 };
 
 #endif

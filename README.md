@@ -28,8 +28,21 @@ export DYLD_LIBRARY_PATH=/Users/$USER/VulkanSDK/$(ls -1 "/Users/$USER/VulkanSDK"
 
 Normal:
 
+- Using make 
 ```bash
 make
+```
+- Using cmake
+```bash
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=<Debug|Release> .. # use Debug to enable debug mode
+
+# Use your generator (most likely, ninja or make)
+# if make:
+make
+# if ninja:
+ninja
 ```
 
 Re-build:
@@ -67,6 +80,8 @@ make debug
 - `4, 5, 6` : increase X, Y, Z model rotation
 
 - `SHIFT` + `4, 5, 6` : decrease X, Y, Z model rotation
+
+- `M` : toggles usage of a texture with a little transition.
 
 ## Sources
 
