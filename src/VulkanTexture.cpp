@@ -235,3 +235,20 @@ VkFormat VulkanApp::findDepthFormat() {
 bool VulkanApp::hasStencilComponent(VkFormat format) {
     return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
+
+void VulkanApp::transition_textures() {
+    float new_dissolve = vertices[0].dissolveTexture + (disable_textures ? -1.f : 1.f) * 0.01f;
+
+    if (disable_textures && new_dissolve < 0) {
+        new_dissolve = 0;
+        transition_over = true;
+    } else if (!disable_textures && new_dissolve > 1) {
+        new_dissolve = 1;
+        transition_over = true;
+    }
+
+    for (auto& vertex : vertices) {
+        vertex.dissolveTexture = new_dissolve;
+    }
+    updateVertexBuffer();
+}
