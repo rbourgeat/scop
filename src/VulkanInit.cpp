@@ -37,7 +37,7 @@ void VulkanApp::mainLoop() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         if (!transition_over)
-            transition_textures();
+            transitionTextures();
         drawFrame();
     }
 

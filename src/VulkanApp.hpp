@@ -101,6 +101,7 @@ struct Vertex {
     float dissolveTexture{1.0};
 
     std::string material_name;
+    vec3 original_color;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -211,6 +212,16 @@ private:
     bool mouseDrag = false;
     bool disable_textures = false;
     bool transition_over = true;
+
+    enum ColorMode {
+        RED,
+        GREEN,
+        BLUE,
+        DARK,
+        NONE
+    };
+
+    ColorMode colorMode = NONE;
 
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -424,45 +435,48 @@ private:
                 // RGB COLORS
                 case GLFW_KEY_R:
                     for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
                         vertex.color = vec3(1, 0.3, 0.3);
                     }
                     app->updateVertexBuffer();
+                    app->colorMode = RED;
                     break;
                 case GLFW_KEY_G:
                     for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
                         vertex.color = vec3(0.3, 1, 0.3);
                     }
+                    app->colorMode = GREEN;
                     app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_B:
                     for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
                         vertex.color = vec3(0.3, 0.3, 1);
                     }
+                    app->colorMode = BLUE;
                     app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_D:
-                    for (size_t i = 0; i < app->vertices.size(); ++i) {
-                        auto& vertex = app->vertices[i];
-
-                        size_t triangleIndex = i / 3;
-
-                        if (triangleIndex % 6 < 2) {
-                            vertex.color = vec3(0.0f, 0.0f, 0.0f);
-                        } else if (triangleIndex % 6 == 2) {
-                            vertex.color = vec3(0.1f, 0.1f, 0.1f);
-                        } else if (triangleIndex % 6 == 3) {
-                            vertex.color = vec3(0.3f, 0.3f, 0.3f);
-                        } else if (triangleIndex % 6 == 4) {
-                            vertex.color = vec3(0.5f, 0.5f, 0.5f);
-                        } else {
-                            vertex.color = vec3(0.7f, 0.7f, 0.7f);
-                        }
-                    }
+                    app->enableDarkMode();
                     app->updateVertexBuffer();
                     break;
                 case GLFW_KEY_M:
                     app->disable_textures = !app->disable_textures;
                     app->transition_over = false;
+                    break;
+                case GLFW_KEY_N:
+                    if (app->colorMode != NONE) {
+                        app->colorMode = NONE;
+
+                        for (auto& vertex : app->vertices) {
+                            vertex.color = vertex.original_color;
+                        }
+                        app->updateVertexBuffer();
+                    }
                     break;
                 case GLFW_KEY_T:
                     if (app->topology == VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST) {
@@ -582,7 +596,8 @@ private:
         app->framebufferResized = true;
     }
 
-    void transition_textures();
+    void transitionTextures();
+    void enableDarkMode();
 };
 
 #endif

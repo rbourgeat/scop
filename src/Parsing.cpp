@@ -97,7 +97,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
                     if (!colors.empty()) {
                         vertex.color = colors[vertexIndices[index]];
                     } else {
-                        vertex.color = vec3(0.4, 1.0, 0.4);
+                        vertex.color = vec3(0.65, 0.65, 0.65);
                     }
 
                     vertex.ambientColor = vec3(1, 1, 1);
