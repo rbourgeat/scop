@@ -109,6 +109,9 @@ void VulkanApp::enableDarkMode() {
 	for (size_t i = 0; i < vertices.size(); ++i) {
 		auto &vertex = vertices[i];
 
+		if (colorMode == NONE)
+			vertex.original_color = vertex.color;
+
 		size_t triangleIndex = i / 3;
 
 		vec3 col_shift = disable_textures ? vec3(0.2f, 0.2f, 0.2f) : vec3(0.0f, 0.0f, 0.0f);

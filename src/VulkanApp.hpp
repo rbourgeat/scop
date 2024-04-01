@@ -101,6 +101,7 @@ struct Vertex {
     float dissolveTexture{1.0};
 
     std::string material_name;
+    vec3 original_color;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
@@ -434,6 +435,8 @@ private:
                 // RGB COLORS
                 case GLFW_KEY_R:
                     for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
                         vertex.color = vec3(1, 0.3, 0.3);
                     }
                     app->updateVertexBuffer();
@@ -441,6 +444,8 @@ private:
                     break;
                 case GLFW_KEY_G:
                     for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
                         vertex.color = vec3(0.3, 1, 0.3);
                     }
                     app->colorMode = GREEN;
@@ -448,6 +453,8 @@ private:
                     break;
                 case GLFW_KEY_B:
                     for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
                         vertex.color = vec3(0.3, 0.3, 1);
                     }
                     app->colorMode = BLUE;
@@ -462,7 +469,14 @@ private:
                     app->transition_over = false;
                     break;
                 case GLFW_KEY_N:
-                    app->colorMode = NONE;
+                    if (app->colorMode != NONE) {
+                        app->colorMode = NONE;
+
+                        for (auto& vertex : app->vertices) {
+                            vertex.color = vertex.original_color;
+                        }
+                        app->updateVertexBuffer();
+                    }
                     break;
                 case GLFW_KEY_T:
                     if (app->topology == VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST) {
