@@ -84,6 +84,13 @@ struct Camera {
     vec3 up;
 };
 
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float dissolve;
+};
+
 struct Vertex {
     vec3 pos;
     vec3 color;
@@ -91,6 +98,8 @@ struct Vertex {
     vec3 ambientColor;
     vec3 specularColor;
     float dissolveFactor;
+
+    std::string material_name;
 
     static VkVertexInputBindingDescription getBindingDescription() {
         VkVertexInputBindingDescription bindingDescription{};
