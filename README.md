@@ -82,7 +82,9 @@ make debug
 
 - `SHIFT` + `4, 5, 6` : decrease X, Y, Z model rotation
 
-- `M` : toggles usage of a texture with a little transition.
+- `M` : toggles usage of a texture with a little transition
+
+- `N` : reset color
 
 ## Sources
 
@@ -92,7 +94,7 @@ make debug
 
 - [ ] Add more material parameters
 
-- [ ] Multisampling
+- [ ] Comput shader
 
 - [ ] Refacto `VulkanApp.hpp`
 
