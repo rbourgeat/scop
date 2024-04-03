@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/03 22:05:59 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:41:05 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
-        std::exit(0);
+        std::exit(EXIT_FAILURE);
     }
 
     std::string mtlFilename;
@@ -33,11 +33,12 @@ void VulkanApp::parseObjFile(const std::string& filename) {
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string type;
-        iss >> type;
+        if (!(iss >> type))
+            continue;
 
         if (iss.eof()) {
             std::cerr << "Error: Empty " << type << " line in file: " << filename << std::endl;
-            std::exit(0);
+            std::exit(EXIT_FAILURE);
         }
 
         if (type == "mtllib") {
@@ -48,7 +49,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             float x, y, z;
             if (!(iss >> x >> y >> z)) {
                 std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
-                std::exit(0);
+                std::exit(EXIT_FAILURE);
             }
             vec3 pos(x, y, z);
             positions.push_back(pos);
@@ -64,14 +65,14 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             float u, v;
             if (!(iss >> u >> v)) {
                 std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
-                std::exit(0);
+                std::exit(EXIT_FAILURE);
             }
             texCoords.push_back(vec2(u, v));
         } else if (type == "vc") {
             float r, g, b;
             if (!(iss >> r >> g >> b)) {
                 std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
-                std::exit(0);
+                std::exit(EXIT_FAILURE);
             }
             colors.push_back(vec3(r, g, b));
         } else if (type == "f") {
@@ -95,7 +96,7 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
             if (vertexIndices.size() < 3) {
                 std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
-                std::exit(0);
+                std::exit(EXIT_FAILURE);
             }
 
             for (size_t j = 0; j < vertexIndices.size() - 2; ++j) {
@@ -173,6 +174,7 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
     std::ifstream file(mtlPath);
     if (!file.is_open()) {
         std::cout << "Warning: MTL file not found: " << mtlPath << std::endl;
+        return;
     }
 
     std::string line;
@@ -195,13 +197,41 @@ void VulkanApp::parseMtlFile(const std::string& objFilePath, const std::string& 
                 std::clog << "Warning: replaced old material " << name << std::endl;
             }
         } else if (type == "Ka") {
-            iss >> mat->second.ambient.x >>  mat->second.ambient.y >>  mat->second.ambient.z;
+            if (mat == materials.end()) {
+                std::cerr << "Error: Material not defined before " << type << " in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            if (!(iss >> mat->second.ambient.x >>  mat->second.ambient.y >>  mat->second.ambient.z)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
         } else if (type == "Kd") {
-            iss >>  mat->second.diffuse.x >>  mat->second.diffuse.y >>  mat->second.diffuse.z;
+            if (mat == materials.end()) {
+                std::cerr << "Error: Material not defined before " << type << " in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            if (!(iss >>  mat->second.diffuse.x >>  mat->second.diffuse.y >>  mat->second.diffuse.z)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
         } else if (type == "Ks") {
-            iss >>  mat->second.specular.x >>  mat->second.specular.y >>  mat->second.specular.z;
+            if (mat == materials.end()) {
+                std::cerr << "Error: Material not defined before " << type << " in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            if (!(iss >>  mat->second.specular.x >>  mat->second.specular.y >>  mat->second.specular.z)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
         } else if (type == "d") {
-            iss >>  mat->second.dissolve;
+            if (mat == materials.end()) {
+                std::cerr << "Error: Material not defined before " << type << " in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
+            if (!(iss >>  mat->second.dissolve)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << mtlFilename << std::endl;
+                std::exit(EXIT_FAILURE);
+            }
         }
         // TODO: add more material properties
     }
@@ -228,7 +258,7 @@ std::vector<char> VulkanApp::readFile(const std::string& filename) {
 
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
-        std::exit(0);
+        std::exit(EXIT_FAILURE);
     }
 
     size_t fileSize = (size_t) file.tellg();
