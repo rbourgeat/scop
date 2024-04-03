@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/03/31 13:38:48 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/03 22:05:59 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,21 @@ void VulkanApp::parseObjFile(const std::string& filename) {
         std::string type;
         iss >> type;
 
+        if (iss.eof()) {
+            std::cerr << "Error: Empty " << type << " line in file: " << filename << std::endl;
+            std::exit(0);
+        }
+
         if (type == "mtllib") {
             iss >> mtlFilename;
         } else if (type == "usemtl") {
             iss >> currentMaterial;
         } else if (type == "v") {
             float x, y, z;
-            iss >> x >> y >> z;
+            if (!(iss >> x >> y >> z)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
+                std::exit(0);
+            }
             vec3 pos(x, y, z);
             positions.push_back(pos);
 
@@ -54,11 +62,17 @@ void VulkanApp::parseObjFile(const std::string& filename) {
             maxZ = std::max(z, maxZ);
         } else if (type == "vt") {
             float u, v;
-            iss >> u >> v;
+            if (!(iss >> u >> v)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
+                std::exit(0);
+            }
             texCoords.push_back(vec2(u, v));
         } else if (type == "vc") {
             float r, g, b;
-            iss >> r >> g >> b;
+            if (!(iss >> r >> g >> b)) {
+                std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
+                std::exit(0);
+            }
             colors.push_back(vec3(r, g, b));
         } else if (type == "f") {
             std::vector<int> vertexIndices;
@@ -76,7 +90,12 @@ void VulkanApp::parseObjFile(const std::string& filename) {
                         texCoordIndices.push_back(std::stoi(index) - 1);
                     }
                     i++;
-                }
+                } 
+            }
+
+            if (vertexIndices.size() < 3) {
+                std::cerr << "Error: Bad " << type << " line in file: " << filename << std::endl;
+                std::exit(0);
             }
 
             for (size_t j = 0; j < vertexIndices.size() - 2; ++j) {

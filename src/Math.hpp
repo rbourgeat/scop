@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/02/12 11:19:31 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/03 21:49:27 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,7 +278,7 @@ public:
 
     // Convert quaternion to a 4x4 matrix (rotation matrix)
     mat4 toMat4() const {
-        const float xx = x * x;
+        // const float xx = x * x;
         const float xy = x * y;
         const float xz = x * z;
         const float xw = x * w;
