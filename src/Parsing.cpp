@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 07:50:09 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/03 22:41:05 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/08 11:22:46 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ void VulkanApp::parseObjFile(const std::string& filename) {
 
                     if (!texCoords.empty()) {
                         vertex.texCoord = texCoords[texCoordIndices[index]];
+                    } else {
+                        vertex.texCoord = vec2(vertex.pos.x, vertex.pos.y);
                     }
 
                     if (!colors.empty()) {

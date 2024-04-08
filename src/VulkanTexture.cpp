@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 19:54:29 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/02 22:06:36 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/08 10:39:54 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void VulkanApp::createTextureImage() {
     int texWidth, texHeight, texChannels;
 #ifdef __APPLE__
-    std::vector<unsigned char> pixels = Image::loadImage("../textures/stone.bmp", texWidth, texHeight, texChannels);
+    std::vector<unsigned char> pixels = Image::loadImage("../textures/chipi.bmp", texWidth, texHeight, texChannels);
 #else
-    std::vector<unsigned char> pixels = Image::loadImage("textures/stone.bmp", texWidth, texHeight, texChannels);
+    std::vector<unsigned char> pixels = Image::loadImage("textures/chipi.bmp", texWidth, texHeight, texChannels);
 #endif
     VkDeviceSize imageSize = texWidth * texHeight * 4;
     mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;

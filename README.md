@@ -70,7 +70,6 @@ make debug
 - `SPACE` : reset object position/rotation + camera
 
 - `R, G, B, D` : color in red, green, blue or dark (like the subject)
-- `N` : disables color mode
 
 - `T` : change topology
 
