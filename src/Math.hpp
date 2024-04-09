@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/03 21:49:27 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/09 14:43:08 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,6 +344,16 @@ public:
 
     static float degrees(float radians) {
         return radians * 57.2958f; // 180/π
+    }
+
+    static float clamp(float x, float minVal, float maxVal) {
+        if (x < minVal) {
+            return minVal;
+        } else if (x > maxVal) {
+            return maxVal;
+        } else {
+            return x;
+        }
     }
 
     static mat4 translate(const mat4& matrix, const vec3& translation) {
