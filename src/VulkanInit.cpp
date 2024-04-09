@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "VulkanApp.hpp"
+#include <sstream>
 
 void VulkanApp::run(const std::string& objFile) {
     parseObjFile(objFile);
@@ -34,11 +35,24 @@ void VulkanApp::initWindow() {
 }
 
 void VulkanApp::mainLoop() {
+    uint32_t frame_cnt = 0;
+    double last_time_print = glfwGetTime();
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         if (!transition_over)
             transitionTextures();
         drawFrame();
+
+        frame_cnt++;
+        if (glfwGetTime() - last_time_print > 1.0 + std::numeric_limits<double>::epsilon()) {
+            std::ostringstream oss;
+            oss << TITLE << " - FPS: " << frame_cnt;
+
+            glfwSetWindowTitle(window, oss.str().c_str());
+            frame_cnt = 0;
+            last_time_print = glfwGetTime();
+        }
     }
 
     vkDeviceWaitIdle(device);
