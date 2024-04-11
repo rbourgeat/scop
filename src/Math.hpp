@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 17:55:33 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/09 14:43:08 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/09 15:43:21 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,15 @@ public:
             os << '\n';
         }
         return os;
+    }
+
+    // Matrix-vector multiplication
+    vec3 operator*(const vec3& v) const {
+        vec3 result(0);
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+                result[i] += elements[i][j] * v[j];
+        return result;
     }
 };
 
