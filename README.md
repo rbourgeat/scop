@@ -2,9 +2,9 @@
 
 Basic 3D model viewer made with Vulkan, C++ and GLFW.
 
-![tifa.obj](https://i.ibb.co/s5bTjC1/Screenshot-from-2024-04-13-15-20-04.png)
+![tifa.obj](http://i.ibb.co/s5bTjC1/Screenshot-from-2024-04-13-15-20-04.png)
 
-![teapot.obj](https://i.ibb.co/L6svR8M/Screenshot-from-2024-04-13-15-20-31.png)
+![teapot.obj](http://i.ibb.co/L6svR8M/Screenshot-from-2024-04-13-15-20-31.png)
 
 ## Pre-requisites
 
