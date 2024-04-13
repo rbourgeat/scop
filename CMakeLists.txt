@@ -64,3 +64,5 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         PRIVATE ${Vulkan_LIBRARIES}
         PRIVATE glfw
         PRIVATE glm::glm)
+
+add_subdirectory(doxygen)
