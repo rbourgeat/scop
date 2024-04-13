@@ -32,4 +32,4 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target doxygen
 
       - name: Check installed documentation
-        run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
+        run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
