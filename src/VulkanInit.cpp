@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 06:50:01 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/02 22:39:30 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/11 10:59:47 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void VulkanApp::initWindow() {
 }
 
 void VulkanApp::mainLoop() {
-    uint32_t frame_cnt = 0;
+    uint32_t fps = 0;
     double last_time_print = glfwGetTime();
 
     while (!glfwWindowShouldClose(window)) {
@@ -44,13 +44,13 @@ void VulkanApp::mainLoop() {
             transitionTextures();
         drawFrame();
 
-        frame_cnt++;
+        fps++;
         if (glfwGetTime() - last_time_print > 1.0 + std::numeric_limits<double>::epsilon()) {
             std::ostringstream oss;
-            oss << TITLE << " - FPS: " << frame_cnt;
+            oss << TITLE << " - " << fps << " fps";
 
             glfwSetWindowTitle(window, oss.str().c_str());
-            frame_cnt = 0;
+            fps = 0;
             last_time_print = glfwGetTime();
         }
     }
