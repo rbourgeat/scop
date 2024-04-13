@@ -54,7 +54,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target doxygen
 
       - name: Upload documentation artifacts
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           name: Docs
           path: ${{github.workspace}}/build/doxygen/out/html
