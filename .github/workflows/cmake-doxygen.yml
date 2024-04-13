@@ -20,8 +20,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: ssciwr/doxygen-install@v1
+      - name: Setup GitHub Actions
+        uses: actions/checkout@v3
+      - name: Setup Doxygen
+        uses: ssciwr/doxygen-install@v1
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v2
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
