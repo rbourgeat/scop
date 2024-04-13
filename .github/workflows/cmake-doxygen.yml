@@ -38,3 +38,8 @@ jobs:
 
       - name: Check installed documentation
         run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
+
+      - name: Check where are deps
+        run: |
+          which dot
+          which doxygen
