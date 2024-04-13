@@ -4,7 +4,6 @@ project(scop DESCRIPTION "a small 3D object loader")
 set(CMAKE_CXX_STANDARD 20)
 
 file(GLOB_RECURSE SRCS "src/*.cpp" "src/*.hpp")
-
 add_subdirectory(doxygen)
 
 if (NOT CMAKE_BUILD_TYPE STREQUAL Documentation)
