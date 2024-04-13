@@ -12,6 +12,10 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Documentation
 
+  DOXYGEN_VERSION: "1.10.0"
+  GRAPHVIZ_VERSION: '2.42.2-3build2'
+  DEPS_PATH: ~/deps
+
 jobs:
   build:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
@@ -22,6 +26,14 @@ jobs:
     steps:
       - name: Setup GitHub Actions
         uses: actions/checkout@v3
+
+      - name: Setup Doxygen cache
+        uses: actions/cache@v4
+        id: doxygen-cache
+        with:
+          path: ~/deps/**
+          key: doxygen-${{env.DOXYGEN_VERSION}}
+
       - name: Setup Doxygen
         uses: ssciwr/doxygen-install@v1
       - name: Setup Graphviz
@@ -36,13 +48,22 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target doxygen
 
-      - name: Check installed documentation
-        run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
+      - name: Upload documentation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Docs
+          path: ${{github.workspace}}/build/doxygen/out/html
+          if-no-files-found: error
+          retention-days: 7
+          overwrite: true
 
-      - name: Check where are deps
-        run: |
-          which dot
-          which doxygen
-          
-          dot -V
-          doxygen --version
+#      - name: Check installed documentation
+#        run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
+#
+#      - name: Check where are deps
+#        run: |
+#          which dot
+#          which doxygen
+#
+#          dot -V
+#          doxygen --version
