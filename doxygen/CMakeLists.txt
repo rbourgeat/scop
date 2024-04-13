@@ -10,10 +10,8 @@ if (Doxygen_FOUND)
         set(DOXYGEN_CASE_SENSE_NAMES NO)
     endif ()
 
-    get_target_property(SOURCES ${CMAKE_PROJECT_NAME} SOURCES)
-
     doxygen_add_docs(
             doxygen
-            ${SOURCES}
+            ${SRCS}
     )
 endif ()

@@ -3,5 +3,5 @@ src/*.d
 src/*.o
 resources
 shaders/*spv
-cmake-build-debug
+cmake-build-*
 .idea
