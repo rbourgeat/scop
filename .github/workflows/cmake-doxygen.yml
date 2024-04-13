@@ -44,5 +44,5 @@ jobs:
           which dot
           which doxygen
           
-          dot --version
+          dot -V
           doxygen --version
