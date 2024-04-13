@@ -27,12 +27,12 @@ jobs:
       - name: Setup GitHub Actions
         uses: actions/checkout@v3
 
-      - name: Setup Doxygen cache
-        uses: actions/cache@v4
-        id: doxygen-cache
-        with:
-          path: ~/deps/**
-          key: doxygen-${{env.DOXYGEN_VERSION}}
+#      - name: Setup Doxygen cache
+#        uses: actions/cache@v4
+#        id: doxygen-cache
+#        with:
+#          path: ~/deps/**
+#          key: doxygen-${{env.DOXYGEN_VERSION}}
 
       - name: Setup Doxygen
         uses: ssciwr/doxygen-install@v1
@@ -55,7 +55,16 @@ jobs:
           path: ${{github.workspace}}/build/doxygen/out/html
           if-no-files-found: error
           retention-days: 7
-          overwrite: true
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: Docs
 
 #      - name: Check installed documentation
 #        run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
