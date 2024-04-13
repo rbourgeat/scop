@@ -6,7 +6,7 @@
 /*   By: rbourgea <rbourgea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 08:57:56 by rbourgea          #+#    #+#             */
-/*   Updated: 2024/04/09 14:58:10 by rbourgea         ###   ########.fr       */
+/*   Updated: 2024/04/13 15:12:16 by rbourgea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,6 +219,7 @@ private:
         GREEN,
         BLUE,
         DARK,
+        BLACK,
         NONE
     };
 
@@ -441,6 +442,16 @@ private:
                     app->positionModel = vec3(0.0f, 0.0f, 0.0f);
                     app->rotationModel = vec3(0.0f, 0.0f, 0.0f);
                     app->cameraView.center = vec3(0.0f, 0.0f, 0.0f);
+                    break;
+                // Black Color
+                case GLFW_KEY_0:
+                    for (auto& vertex : app->vertices) {
+                        if (app->colorMode == NONE)
+                            vertex.original_color = vertex.color;
+                        vertex.color = vec3(0, 0, 0);
+                    }
+                    app->colorMode = BLACK;
+                    app->updateVertexBuffer();
                     break;
                 // RGB COLORS
                 case GLFW_KEY_R:

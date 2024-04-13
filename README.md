@@ -2,7 +2,9 @@
 
 Basic 3D model viewer made with Vulkan, C++ and GLFW.
 
-![42](https://i.ibb.co/GdJhFQt/Screenshot-from-2024-04-09-15-09-55.png)
+![tifa.obj](https://i.ibb.co/s5bTjC1/Screenshot-from-2024-04-13-15-20-04.png)
+
+![teapot.obj](https://i.ibb.co/L6svR8M/Screenshot-from-2024-04-13-15-20-31.png)
 
 ## Pre-requisites
 
@@ -69,7 +71,7 @@ make debug
 
 - `SPACE` : reset object position/rotation + camera
 
-- `R, G, B, D` : color in red, green, blue or dark (like the subject)
+- `R, G, B, D, 0` : color in red, green, blue, dark or black (like the subject)
 
 - `T` : change topology
 
